@@ -1,0 +1,1 @@
+Place here all teh static files necessary in the project such as query templates.

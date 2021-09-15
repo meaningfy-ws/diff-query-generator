@@ -1,0 +1,10 @@
+
+Click
+jinja2
+
+# Testing Dependencies
+pytest
+
+# Documentation Dependencies
+sphinx
+sphinxcontrib-apidoc
