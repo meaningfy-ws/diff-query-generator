@@ -7,22 +7,31 @@
 
 """ """
 import abc
-import pathlib
 
 
 class BaseQueryGenerator(abc.ABC):
 
     @abc.abstractmethod
-    def build_query(self) -> str:
+    def build_query_template(self):
         """
             This method builds a desired SPARQL query from the template
         :return: the string representation of the SPARQL query
         """
+        pass
 
-    def to_file(self, output_file_path: pathlib.PathPath):
+    @abc.abstractmethod
+    def build_file_path(self):
         """
-            Writes the generated query to a file.
-        :param output_file_path:
+            This method will build the file and file path for the generated query
         :return:
         """
-        output_file_path.open('w').write(self.build_query())
+        pass
+
+    def to_file(self):
+        """
+            Writes the generated query to a file.
+        :param file_name:
+        :param query:
+        """
+        print("Create file .....")
+        self.build_query_template().dump(self.build_file_path())

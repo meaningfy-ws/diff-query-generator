@@ -6,25 +6,37 @@
 # Email: costezki.eugen@gmail.com 
 
 """ """
+from dqgen.adapters import template_builder, query_file_name_builder
 from dqgen.services.base_query_generator import BaseQueryGenerator
+from dqgen.services.query_template_registry import QueryTemplateRegistry
 
 
 class InstanceAdditionsGenerator(BaseQueryGenerator):
     """
-        TBD
+        This class will build the instance additions query as a file and
+        will put the file into the defined output folder
     """
 
-    def build_query(self) -> str:
-        # template = resource_fetcher.get_template(INSTANCE_TEMPLATE)
-        # output = template_builder.build(template,p1,p2,p3)
-        # return output
-        pass
+    def __init__(self, cls: str, operation, output_folder_path: str):
+        self.cls = cls
+        self.operation = operation
+        self.output_folder_path = output_folder_path
 
+    def build_file_path(self):
+        return query_file_name_builder.make_query_file_name(output_folder_path=self.output_folder_path,
+                                                            operation=self.operation,
+                                                            cls=self.cls)
 
-class SimplePropertyAdditionsGenerator(BaseQueryGenerator):
-    """
-        TBD
-    """
+    def build_query_template(self):
+        template = QueryTemplateRegistry().INSTANCE_ADDITIONS
+        output = template_builder.build_template(jinja2_template=template, cls=self.cls)
 
-    def build_query(self) -> str:
-        pass
+        return output
+
+# class SimplePropertyAdditionsGenerator(BaseQueryGenerator):
+#     """
+#         TBD
+#     """
+#
+#     def build_query_template(self) -> str:
+#         pass
