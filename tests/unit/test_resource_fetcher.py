@@ -5,8 +5,9 @@ from dqgen.adapters.resource_fetcher import get_file_content, get_query_template
 
 def test_get_file_content():
     path = "../test_data/test_files/sparqrl_query.rq"
-
+    print(pathlib.Path(__file__).resolve())
     result = get_file_content(path)
+
     assert isinstance(result, str)
     assert "?person foaf:name ?name " in result
 

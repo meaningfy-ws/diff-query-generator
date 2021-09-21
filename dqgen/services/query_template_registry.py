@@ -24,3 +24,15 @@ class QueryTemplateRegistry:
     @property
     def REIFIED_PROPERTY_ADDITIONS(self) -> str:
         return get_query_template("reified_properties_additions.rq")
+
+    @property
+    def INSTANCE_DELETIONS(self) -> str:
+        return get_query_template("instance_deletions.rq")
+
+    @property
+    def PROPERTY_DELETIONS(self) -> str:
+        return get_query_template("property_deletions.rq")
+
+    @property
+    def REIFIED_PROPERTY_DELETIONS(self) -> str:
+        return get_query_template("reified_properties_deletions.rq")

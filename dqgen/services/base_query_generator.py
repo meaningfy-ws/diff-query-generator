@@ -33,5 +33,4 @@ class BaseQueryGenerator(abc.ABC):
         :param file_name:
         :param query:
         """
-        print("Create file .....")
         self.build_query_template().dump(self.build_file_path())

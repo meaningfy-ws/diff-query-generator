@@ -21,7 +21,7 @@ from dqgen.resources import query_templates
 
 def get_file_content(resource_path: str) -> str:
     """
-        Given a resource path read the file and return it as a string.
+        Given a resource path read the file and return the file content it as a string.
     :param resource_path:
     :return:
     """

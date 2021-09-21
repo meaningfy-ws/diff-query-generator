@@ -2,17 +2,18 @@ import shutil
 from pathlib import Path
 
 from dqgen.adapters.resource_fetcher import get_file_content
-from dqgen.services.additions_query_generator import InstanceAdditionsGenerator, SimplePropertyAdditionsGenerator, \
-    ReifiedPropertyAdditionsGenerator
+from dqgen.services.deletions_query_generator import InstanceDeletionsGenerator, SimplePropertyDeletionsGenerator, \
+    ReifiedPropertyDeletionsGenerator
 
 
-def test_instance_additions_generator():
+def test_instance_deletions_generator():
     output_folder_path = "../test_data/output"
     expected_query_text = """  FILTER NOT EXISTS {
-    GRAPH ?oldVersionGraph {
-      ?instance ?p [] .
-    }"""
-    query_generator = InstanceAdditionsGenerator(cls="skos:Concept", operation="added_instance",
+    GRAPH ?newVersionGraph {
+      ?instance ?p []
+    }
+  }"""
+    query_generator = InstanceDeletionsGenerator(cls="skos:Concept", operation="deleted_instance",
                                                  output_folder_path=output_folder_path)
     generated_file_path = query_generator.build_file_path()
     print(generated_file_path)
@@ -29,11 +30,11 @@ def test_instance_additions_generator():
 def test_simple_property_additions_generator():
     output_folder_path = "../test_data/output"
     expected_query_text = """  FILTER NOT EXISTS {
-    GRAPH ?deletionsGraph {
+    GRAPH ?insertionsGraph {
       [] ?property ?value .
     }
   }"""
-    query_generator = SimplePropertyAdditionsGenerator(cls="skos:Concept", operation="added_property",
+    query_generator = SimplePropertyDeletionsGenerator(cls="skos:Concept", operation="deleted_property",
                                                        property="skos:notation",
                                                        output_folder_path=output_folder_path)
     generated_file_path = query_generator.build_file_path()
@@ -51,12 +52,12 @@ def test_simple_property_additions_generator():
 def test_reified_property_additions_generator():
     output_folder_path = "../test_data/output"
     expected_query_text = """  FILTER NOT EXISTS {
-    GRAPH ?deletionsGraph {
-        [] ?property ?object .
-        ?object ?objProperty ?value .
+    GRAPH ?insertionsGraph {
+      [] ?property ?object .
+      ?object ?objProperty ?value .
     }
   }"""
-    query_generator = ReifiedPropertyAdditionsGenerator(cls="skos:Concept", operation="added_reified",
+    query_generator = ReifiedPropertyDeletionsGenerator(cls="skos:Concept", operation="deleted_reified",
                                                         property="skosxl:prefLabel",
                                                         object_property="skosxl:literalForm",
                                                         output_folder_path=output_folder_path)
