@@ -36,3 +36,11 @@ class QueryTemplateRegistry:
     @property
     def REIFIED_PROPERTY_DELETIONS(self) -> str:
         return get_query_template("reified_properties_deletions.rq")
+
+    @property
+    def PROPERTY_VALUE_UPDATES(self) -> str:
+        return get_query_template("property_value_updates.rq")
+
+    @property
+    def PROPERTY_MOVEMENT_CROSS_INSTANCE(self) -> str:
+        return get_query_template("property_movement_cross_instance.rq")

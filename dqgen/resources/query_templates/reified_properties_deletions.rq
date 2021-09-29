@@ -36,7 +36,7 @@ PREFIX xhv: <http://www.w3.org/1999/xhtml/vocab#>
 #
 # Show all deleted instance/property/object property statements in the current version
 #
-SELECT DISTINCT ?instance (str(?prefLabel) as ?instanceLabel) ?property ?objProperty (?value AS ?deletedValue)
+SELECT DISTINCT ?instance (?prefLabel as ?instanceLabel) ?property ?objProperty (?value AS ?deletedValue)
 WHERE {
   GRAPH ?versionHistoryGraph {
     # parameters
@@ -71,7 +71,8 @@ WHERE {
   }
   # get all deleted reified structures
   GRAPH ?deletionsGraph {
-    [] ?property ?value .
+    [] ?property ?object .
+    ?object ?objProperty ?value .
   }
   # ... which were not attached to some (other) instance now
   FILTER NOT EXISTS {

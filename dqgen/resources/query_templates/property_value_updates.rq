@@ -37,7 +37,7 @@ PREFIX xhv: <http://www.w3.org/1999/xhtml/vocab#>
 #
 # Show all added instance/property statements in the current version
 #
-SELECT DISTINCT ?instance (?prefLabel as ?instanceLabel) ?property (?value AS ?addedValue)
+SELECT DISTINCT ?instance (?prefLabel as ?instanceLabel) ?property (?old_value AS ?initialValue) (?value AS ?updatedValue)
 WHERE {
   GRAPH ?versionHistoryGraph {
     # parameters
@@ -70,26 +70,30 @@ WHERE {
       sh:usingNamedGraph/sd:name ?insertionsGraph .
   }
   # get all property values
-  GRAPH ?insertionsGraph {
-    [] ?property ?value .
-  }
-  # ... which were not attached to some (other) instance before
-  FILTER NOT EXISTS {
-    GRAPH ?deletionsGraph {
-      [] ?property ?value .
-    }
-  }
   GRAPH ?newVersionGraph {
-    # get instances with those property values
     ?instance a ?class .
     ?instance ?property ?value .
     optional {
       ?instance skos:prefLabel ?prefLabel .
-      {% if lang is defined and lang != None %}
       #restrict prefLabel to a certain language
-      FILTER (lang(?prefLabel) = "{{ lang }}")
-      {% endif %}
+      FILTER (lang(?prefLabel) = "en")
     }
   }
+  # ... which were attached to some (other) instance before and had another value
+  GRAPH ?oldVersionGraph {
+      ?instance ?property ?old_value .
+  }
+  # the old value shall be deleted
+  GRAPH ?deletionsGraph {
+      ?instance ?property ?old_value .
+    }
+  # the new value shall be inserted
+  GRAPH ?insertionsGraph {
+      ?instance ?property ?value .
+   }
+  # the language tag shall be the same
+
+  FILTER( lang(?old_value) = lang(?value) && ?old_value != ?value )
+
 }
 ORDER BY ?instance ?value
