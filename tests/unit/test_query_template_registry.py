@@ -6,5 +6,5 @@ def test_query_template_registry():
                   QueryTemplateRegistry().REIFIED_PROPERTY_ADDITIONS, QueryTemplateRegistry().INSTANCE_DELETIONS,
                   QueryTemplateRegistry().PROPERTY_DELETIONS, QueryTemplateRegistry().REIFIED_PROPERTY_DELETIONS]:
         assert "SELECT" in query
-        assert "FILTER" in query
+        assert "GRAPH" in query
         assert isinstance(query, str)

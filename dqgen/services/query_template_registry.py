@@ -12,7 +12,9 @@ from dqgen.adapters.resource_fetcher import get_query_template
 
 
 class QueryTemplateRegistry:
-
+    """
+    This class holds a registry to the SPARQL template queries files
+    """
     @property
     def INSTANCE_ADDITIONS(self) -> str:
         return get_query_template("instance_additions.rq")
