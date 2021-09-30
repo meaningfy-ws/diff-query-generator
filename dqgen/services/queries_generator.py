@@ -11,10 +11,10 @@ from pathlib import Path
 import pandas as pd
 
 from dqgen.adapters.ap_reader import read_ap_from_csv
-from dqgen.services.additions_query_generator import InstanceAdditionsGenerator, SimplePropertyAdditionsGenerator, \
-    ReifiedPropertyAdditionsGenerator
-from dqgen.services.deletions_query_generator import InstanceDeletionsGenerator, SimplePropertyDeletionsGenerator, \
-    ReifiedPropertyDeletionsGenerator
+from dqgen.services import CLASSES_OPERATION_TEMPLATE_MAPPING, PROPERTIES_OPERATION_TEMPLATE_MAPPING, \
+    REIFIED_PROPERTIES_OPERATION_TEMPLATE_MAPPING
+from dqgen.services.query_generator import QueryGenerator
+
 
 OUTPUT_FOLDER_PATH = "output/"
 APS_FOLDER_PATH = Path(__file__).parent.parent / "resources" / "aps"
@@ -26,10 +26,10 @@ def generate_class_level_queries(processed_csv_file: pd.DataFrame, output_folder
     """
 
     for cls in processed_csv_file["class"].unique():
-        InstanceAdditionsGenerator(cls=cls, operation="added_instance",
-                                   output_folder_path=output_folder_path).to_file()
-        InstanceDeletionsGenerator(cls=cls, operation="deleted_instance",
-                                   output_folder_path=output_folder_path).to_file()
+        for operation, template in CLASSES_OPERATION_TEMPLATE_MAPPING.items():
+            QueryGenerator(cls=cls, operation=operation,
+                           output_folder_path=output_folder_path, template=template).to_file()
+
     logging.info("Generated instance queries ...")
 
 
@@ -39,14 +39,13 @@ def generate_property_level_queries(processed_csv_file: pd.DataFrame, output_fol
     """
     for index, row in processed_csv_file.iterrows():
         if not row["object property"]:
-            SimplePropertyAdditionsGenerator(cls=row["class"],
-                                             property=row["property"],
-                                             operation="added_property",
-                                             output_folder_path=output_folder_path).to_file()
-            SimplePropertyDeletionsGenerator(cls=row["class"],
-                                             property=row["property"],
-                                             operation="deleted_property",
-                                             output_folder_path=output_folder_path).to_file()
+            for operation, template in PROPERTIES_OPERATION_TEMPLATE_MAPPING.items():
+                QueryGenerator(cls=row["class"],
+                               prop=row["property"],
+                               operation=operation,
+                               output_folder_path=output_folder_path,
+                               template=template).to_file()
+
     logging.info("Generated property queries ...")
 
 
@@ -56,16 +55,14 @@ def generate_reified_property_level_queries(processed_csv_file: pd.DataFrame, ou
     """
     for index, row in processed_csv_file.iterrows():
         if row["object property"]:
-            ReifiedPropertyAdditionsGenerator(cls=row["class"],
-                                              property=row["property"],
-                                              object_property=row["object property"],
-                                              operation="added_reified",
-                                              output_folder_path=output_folder_path).to_file()
-            ReifiedPropertyDeletionsGenerator(cls=row["class"],
-                                              property=row["property"],
-                                              object_property=row["object property"],
-                                              operation="deleted_reified",
-                                              output_folder_path=output_folder_path).to_file()
+            for operation, template in REIFIED_PROPERTIES_OPERATION_TEMPLATE_MAPPING.items():
+                QueryGenerator(cls=row["class"],
+                               prop=row["property"],
+                               object_property=row["object property"],
+                               operation=operation,
+                               output_folder_path=output_folder_path,
+                               template=template).to_file()
+
     logging.info("Generated reified property queries ...")
 
 
