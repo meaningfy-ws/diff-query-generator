@@ -1,4 +1,4 @@
-include docker/.env
+#include docker/.env
 
 BUILD_PRINT = \e[1;34mSTEP: \e[0m
 
@@ -11,11 +11,18 @@ install:
 	@ pip install --upgrade pip
 	@ pip install -r requirements.txt
 
------------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
 # Test commands
 #-----------------------------------------------------------------------------
 
 test:
 	@ echo "$(BUILD_PRINT)Running the tests"
-	@ pytest
+	@ cd tests/unit && pytest
 
+#-----------------------------------------------------------------------------
+# Generator commands
+#-----------------------------------------------------------------------------
+# example: make generate_queries ap=skos_core.csv
+# the csv file needs to exist in the resource/aps folder
+generate_queries:
+	@ python -m dqgen.entrypoints.cli.generate_queries $(ap)
