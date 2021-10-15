@@ -10,7 +10,7 @@ from pathlib import Path
 from dqgen.adapters import camel_case_split
 
 
-def make_query_file_name(output_folder_path, operation, cls, prop, obj_prop):
+def make_query_file_name(output_folder_path, operation, cls, prop, obj_prop, file_extension):
     """ takes a prefix with operation and a short RDF URI notation (prefix:name) and returns a filename"""
     base = Path(output_folder_path)
     base.resolve().mkdir(exist_ok=True)
@@ -31,11 +31,11 @@ def make_query_file_name(output_folder_path, operation, cls, prop, obj_prop):
         object_predicate = None
     if predicate:
         if object_predicate:
-            file_name = f"{str.lower(operation)}_{subject}_{predicate}_{object_predicate}.rq"
+            file_name = f"{str.lower(operation)}_{subject}_{predicate}_{object_predicate}.{file_extension}"
         else:
-            file_name = f"{str.lower(operation)}_{subject}_{predicate}.rq"
+            file_name = f"{str.lower(operation)}_{subject}_{predicate}.{file_extension}"
     else:
-        file_name = f"{str.lower(operation)}_{subject}.rq"
+        file_name = f"{str.lower(operation)}_{subject}.{file_extension}"
     file_name = base / file_name
     file_name.resolve()
     return str(file_name)

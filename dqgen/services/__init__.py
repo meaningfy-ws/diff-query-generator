@@ -16,3 +16,8 @@ PROPERTIES_OPERATION_TEMPLATE_MAPPING = {"added_property": QueryTemplateRegistry
                                          "deleted_property": QueryTemplateRegistry().PROPERTY_DELETIONS}
 REIFIED_PROPERTIES_OPERATION_TEMPLATE_MAPPING = {"added_reified": QueryTemplateRegistry().REIFIED_PROPERTY_ADDITIONS,
                                                  "deleted_reified": QueryTemplateRegistry().REIFIED_PROPERTY_DELETIONS}
+
+INSTANCE_OPERATIONS = ["added_instance", "deleted_instance"]
+PROPERTIES_OPERATIONS=["added_property", "deleted_property"]
+REIFIED_PROPERTIES_OPERATIONS=["added_reified", "deleted_reified"]
+

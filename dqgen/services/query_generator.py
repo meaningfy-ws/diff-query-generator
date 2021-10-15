@@ -28,18 +28,19 @@ class QueryGenerator:
         self.old_version_graph = old_version_graph
         self.version_history_graph = version_history_graph
         self.language = language
+        self.file_extension = "rq"
 
     def build_query_template(self):
         """
             This method builds a desired SPARQL query from the template
         :return: the string representation of the SPARQL query
         """
-        return template_builder.build_template(jinja2_template=self.template, cls=self.cls, prop=self.prop,
-                                               obj_prop=self.object_property, new_version=self.new_version_graph,
-                                               old_version=self.old_version_graph,
-                                               version_history_graph=self.version_history_graph, lang=self.language)
+        return template_builder.build_query_template(jinja2_template=self.template, cls=self.cls, prop=self.prop,
+                                                     obj_prop=self.object_property, new_version=self.new_version_graph,
+                                                     old_version=self.old_version_graph,
+                                                     version_history_graph=self.version_history_graph, lang=self.language)
 
-    def build_file_path(self):
+    def build_file_path(self, file_extension):
         """
             This method will build the file and file path for the generated query
         :return:
@@ -48,7 +49,8 @@ class QueryGenerator:
                                                             operation=self.operation,
                                                             cls=self.cls,
                                                             prop=self.prop,
-                                                            obj_prop=self.object_property)
+                                                            obj_prop=self.object_property,
+                                                            file_extension=file_extension)
 
     def to_file(self):
         """
@@ -56,5 +58,4 @@ class QueryGenerator:
         :param file_name:
         :param query:
         """
-        self.build_query_template().dump(self.build_file_path())
-
+        self.build_query_template().dump(self.build_file_path(file_extension=self.file_extension))

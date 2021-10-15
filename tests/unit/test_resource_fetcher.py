@@ -1,6 +1,6 @@
 import pathlib
 
-from dqgen.adapters.resource_fetcher import get_file_content, get_query_template
+from dqgen.adapters.resource_fetcher import get_file_content, get_query_template, get_html_template
 
 
 def test_get_file_content():
@@ -19,3 +19,12 @@ def test_get_query_template():
     }"""
     assert isinstance(query, str)
     assert query_text in query
+
+
+def test_get_query_template():
+    html_template = get_html_template("instance.jinja2")
+    html_template_text = """{% raw %}
+{% import "macros.html" as mc %}
+{% endraw %}"""
+    assert isinstance(html_template, str)
+    assert html_template_text in html_template

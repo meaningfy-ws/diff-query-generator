@@ -26,3 +26,11 @@ test:
 # the csv file needs to exist in the resource/aps folder
 generate_queries:
 	@ python -m dqgen.entrypoints.cli.generate_queries $(ap)
+
+#-----------------------------------------------------------------------------
+# Generator commands
+#-----------------------------------------------------------------------------
+# example: make generate_html_templates ap=skos_core.csv
+# the csv file needs to exist in the resource/aps folder
+generate_html_templates:
+	@ python -m dqgen.entrypoints.cli.generate_html_template $(ap)

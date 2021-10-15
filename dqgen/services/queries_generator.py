@@ -71,11 +71,12 @@ def generate_from_csv(ap_file_name: str, output_base_dir=OUTPUT_FOLDER_PATH, aps
         generates a set of diff queries from the configuration CSV
     """
     output = Path(output_base_dir) / Path(ap_file_name).stem
+    queries_output = output / "queries"
     output.mkdir(parents=True, exist_ok=True)
 
     processed_csv_file = read_ap_from_csv(aps_folder_path / ap_file_name)
 
-    generate_class_level_queries(processed_csv_file=processed_csv_file, output_folder_path=str(output))
-    generate_property_level_queries(processed_csv_file=processed_csv_file, output_folder_path=str(output))
-    generate_reified_property_level_queries(processed_csv_file=processed_csv_file, output_folder_path=str(output))
-
+    generate_class_level_queries(processed_csv_file=processed_csv_file, output_folder_path=str(queries_output))
+    generate_property_level_queries(processed_csv_file=processed_csv_file, output_folder_path=str(queries_output))
+    generate_reified_property_level_queries(processed_csv_file=processed_csv_file,
+                                            output_folder_path=str(queries_output))
