@@ -35,9 +35,10 @@ def build_query_template(jinja2_template: str, cls: str, prop: str, obj_prop: st
 
 def build_html_template(jinja2_template: str, query_file: str, cls: str, prop: str, obj_prop: str,
                         operation: str, class_name: str, prop_name: str,
-                        obj_prop_name: str) -> jinja2.environment.TemplateStream:
+                        obj_prop_name: str, data_source: dict = None) -> jinja2.environment.TemplateStream:
     """
         given a jinja template and a set of (data) parameters render the template.
+    :param data_source:
     :param obj_prop_name:
     :param prop_name:
     :param class_name:
@@ -56,4 +57,5 @@ def build_html_template(jinja2_template: str, query_file: str, cls: str, prop: s
                                             cls=cls,
                                             class_name=class_name,
                                             property_name=prop_name,
-                                            object_prop_name=obj_prop_name)
+                                            object_prop_name=obj_prop_name,
+                                            data_source=data_source)

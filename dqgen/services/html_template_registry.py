@@ -26,4 +26,11 @@ class HtmlTemplateRegistry:
     @property
     def REIFIED_PROPERTIES(self) -> str:
         return get_html_template("reified_property.jinja2")
+    @property
+    def MAIN(self) -> str:
+        return get_html_template("main.jinja2")
+
+    @property
+    def PROP_GROUP_SECTION(self) -> str:
+        return get_html_template("prop_group_section.jinja2")
 

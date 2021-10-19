@@ -1,0 +1,80 @@
+class,class name,property,property name,object property,object property name,modifiable,language dependent,property_group
+skos:Concept,Concept,skosxl:prefLabel,pref label,skosxl:literalForm,literal form,1,1,preferred labels
+skos:Concept,Concept,skosxl:prefLabel,pref label,owl:deprecated,deprecated,1,,preferred labels
+skos:Concept,Concept,skosxl:prefLabel,pref label,dct:type,type,1,,preferred labels
+skos:Concept,Concept,skosxl:prefLabel,pref label,euvoc:startDate,start date,1,,preferred labels
+skos:Concept,Concept,skosxl:prefLabel,pref label,euvoc:endDate,end date,1,,preferred labels
+skos:Concept,Concept,skosxl:altLabel,alternative label,skosxl:literalForm,literal form,1,1,alternative labels
+skos:Concept,Concept,skosxl:altLabel,alternative label,owl:deprecated,deprecated,1,,alternative labels
+skos:Concept,Concept,skosxl:altLabel,alternative label,dct:type,type,1,,alternative labels
+skos:Concept,Concept,skosxl:altLabel,alternative label,euvoc:startDate,start date,1,,alternative labels
+skos:Concept,Concept,skosxl:altLabel,alternative label,euvoc:endDate,end date,1,,alternative labels
+skos:Concept,Concept,skosxl:hiddenLabel,hidden label,skosxl:literalForm,literal form,1,1,hidden labels
+skos:Concept,Concept,skosxl:hiddenLabel,hidden label,owl:deprecated,deprecated,1,,hidden labels
+skos:Concept,Concept,skosxl:hiddenLabel,hidden label,dct:type,type,1,,hidden labels
+skos:Concept,Concept,skosxl:hiddenLabel,hidden label,euvoc:startDate,start date,1,,hidden labels
+skos:Concept,Concept,skosxl:hiddenLabel,hidden label,euvoc:endDate,end date,1,,hidden labels
+skos:Concept,Concept,skos:notation,notation,rdf:value,value,1,,notes properties
+skos:Concept,Concept,skos:notation,notation,owl:deprecated,deprecated,1,,notes properties
+skos:Concept,Concept,skos:notation,notation,dct:type,type,1,,notes properties
+skos:Concept,Concept,skos:note,note,rdf:value,value,1,1,notes properties
+skos:Concept,Concept,skos:note,note,owl:deprecated,deprecated,1,,notes properties
+skos:Concept,Concept,skos:note,note,dct:type,type,1,,notes properties
+skos:Concept,Concept,skos:note,note,dct:source,source,1,,notes properties
+skos:Concept,Concept,skos:changeNote,change note,rdf:value,value,1,1,notes properties
+skos:Concept,Concept,skos:changeNote,change note,owl:deprecated,deprecated,1,,notes properties
+skos:Concept,Concept,skos:changeNote,change note,dct:type,type,1,,notes properties
+skos:Concept,Concept,skos:changeNote,change note,dct:source,source,1,,notes properties
+skos:Concept,Concept,skos:definition,definition,rdf:value,value,1,1,notes properties
+skos:Concept,Concept,skos:definition,definition,owl:deprecated,deprecated,1,,notes properties
+skos:Concept,Concept,skos:definition,definition,dct:type,type,1,,notes properties
+skos:Concept,Concept,skos:definition,definition,dct:source,source,1,,notes properties
+skos:Concept,Concept,skos:editorialNote,editorial note,rdf:value,value,1,,notes properties
+skos:Concept,Concept,skos:editorialNote,editorial note,owl:deprecated,deprecated,1,,notes properties
+skos:Concept,Concept,skos:editorialNote,editorial note,dct:type,type,1,,notes properties
+skos:Concept,Concept,skos:editorialNote,editorial note,dct:source,source,1,,notes properties
+skos:Concept,Concept,skos:example,example,rdf:value,value,1,1,notes properties
+skos:Concept,Concept,skos:example,example,owl:deprecated,deprecated,1,,notes properties
+skos:Concept,Concept,skos:example,example,dct:type,type,1,,notes properties
+skos:Concept,Concept,skos:example,example,dct:source,source,1,,notes properties
+skos:Concept,Concept,skos:historyNote,history note,rdf:value,value,1,1,notes properties
+skos:Concept,Concept,skos:historyNote,history note,owl:deprecated,deprecated,1,,notes properties
+skos:Concept,Concept,skos:historyNote,history note,dct:type,type,1,,notes properties
+skos:Concept,Concept,skos:historyNote,history note,dct:source,source,1,,notes properties
+skos:Concept,Concept,skos:scopeNote,scope note,rdf:value,value,1,1,notes properties
+skos:Concept,Concept,skos:scopeNote,scope note,owl:deprecated,deprecated,1,,notes properties
+skos:Concept,Concept,skos:scopeNote,scope note,dct:type,type,1,,notes properties
+skos:Concept,Concept,skos:scopeNote,scope note,dct:source,source,1,,notes properties
+skos:Concept,Concept,skos:semanticRelation,semantic relation,,,,,semantic properties
+skos:Concept,Concept,skos:broader,broader,,,,,semantic properties
+skos:Concept,Concept,skos:narrower,narrower,,,,,semantic properties
+skos:Concept,Concept,skos:related,related,,,,,semantic properties
+skos:Concept,Concept,skos:broaderTransitive,broader transitive,,,,,semantic properties
+skos:Concept,Concept,skos:narrowerTransitive,narrower transitive,,,,,semantic properties
+skos:Concept,Concept,skos:mappingRelation,mapping relation,,,,,mapping properties
+skos:Concept,Concept,skos:closeMatch,close match,,,,,mapping properties
+skos:Concept,Concept,skos:exactMatch,exact match,,,,,mapping properties
+skos:Concept,Concept,skos:broadMatch,broad match,,,,,mapping properties
+skos:Concept,Concept,skos:narrowMatch,narrow match,,,,,mapping properties
+skos:Concept,Concept,skos:relatedMatch,related match,,,,,mapping properties
+skos:Concept,Concept,skos:inScheme,in scheme,,,,,scheme properties
+skos:Concept,Concept,skos:topConceptOf,top concept of,,,,,concept evolution properties
+skos:Concept,Concept,dct:replaces,replaces,,,,,mapping properties
+skos:Concept,Concept,euvoc:endDate,end date,,,1,,concept evolution properties
+skos:Concept,Concept,euvoc:startDate,start date,,,1,,concept evolution properties
+skos:Concept,Concept,owl:deprecated,deprecated,,,1,,concept evolution properties
+skos:Concept,Concept,owl:versionInfo,version info,,,1,,concept evolution properties
+skos:Collection,Collection,skosxl:prefLabel,pref label,skosxl:literalForm,literal form,1,1,preferred labels
+skos:OrderedCollection,Ordered Collection,skosxl:prefLabel,pref label,skosxl:literalForm,literal form,1,1,preferred labels
+skos:ConceptScheme,Concept Scheme,skosxl:prefLabel,pref label,skosxl:literalForm,literal form,1,1,preferred labels
+skos:ConceptScheme,Concept Scheme,euvoc:domain,domanin,,,1,,identifiers properties 
+skos:ConceptScheme,Concept Scheme,dct:identifier,identifier,,,1,,identifiers properties 
+skos:ConceptScheme,Concept Scheme,skosxl:prefLabel,pref label,skosxl:literalForm,literal form,1,1,preferred labels
+skos:ConceptScheme,Concept Scheme,skosxl:prefLabel,pref label,owl:deprecated,deprecated,1,,preferred labels
+skos:ConceptScheme,Concept Scheme,skosxl:prefLabel,pref label,dct:type,type,1,,preferred labels
+skos:ConceptScheme,Concept Scheme,owl:versionInfo,version info,,,1,,concept evolution properties
+skos:ConceptScheme,Concept Scheme,dct:identifier,identifier,,,1,,identifiers properties 
+skos:ConceptScheme,Concept Scheme,euvoc:domain,domanin,,,1,,identifiers properties 
+skos:ConceptScheme,Concept Scheme,dct:isPartOf,is part of,,,,,concept evolution properties
+skos:ConceptScheme,Concept Scheme,dct:created,created,,,1,,concept evolution properties
+skos:ConceptScheme,Concept Scheme,dct:modified,modified,,,1,,concept evolution properties
