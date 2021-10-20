@@ -61,6 +61,41 @@ Before we introduce the quantification assumptions, we need to mention that the 
 | exists in the Deletions graph						| does NOT exist in the Deletions graph [redundant]		|
 | exists in the OldVersion graph [redundant] 			| does NOT exist in the OldVersion graph 	|
 
+## Test Dataset elaboration
+### ds.A.1 - ds.A.2 (skos model & skos lexicalisation)
+#### Model coverage:
+	- skos:Cocnept (5), skos:ConceptScheme (1)
+	- skos:prefLabel (1-5 per each concept), skos:altLabel (0-5 epr concept), skos:notation (0-5 per concept)
+
+#### Operations coverage
+	- addition instance (2)
+	- deletion instance (2)
+	- addition property value (2 - skos:altLabel  )
+	- deletion property value (2 - skos:prefLabel )
+	- value update property (1 - skos:notation)
+	- value update property (1 - skos:altLabel)
+	- movement (cross instance) - (1 skos:notation and 1 skos:altLabel move to anotehr concept)
+	- movement (cross property) - (1 skos:notation becomes owl:versionInfo on the same concept; and 1 skos:prefLabel becomes an skos:altLabel)
+
+*note*: make sure that each operations is performed on an independent set of triples. That is, for example, a value update shall not be conflated with a movement, or a value addition shall not be conflated with an update. 
+
+
+### ds.B.1 - ds.B.2 (skos model & skosxl lexicalisation)
+#### Model coverage:
+	- skos:Cocnept (5), skos:ConceptScheme (1)
+	- skosxl:prefLabel (1-5 per each concept), skosxl:altLabel (1-5 per each concept)
+
+#### Operations coverage
+	- addition reified property value (2 - skosxl:prefLabel)
+	- deletion reified property value (2 - skosxl:altLabel)
+	- value update reified property (2 - skosxl:prefLabel )
+	- value update reified property (2 - skosxl:altLabel )
+	- movement (cross instance) - (1 skosxl:altLabel moves to anotehr concept)
+	- movement (cross property) - (1 skosxl:prefLabel becomes a skosxl:altLabel)
+
+
+*note*: make sure that each operations is performed on an independent set of triples. That is, for example, a value update shall not be conflated with a movement, or a value addition shall not be conflated with an update. 
+
 
 # Contributing
 You are more than welcome to help expand and mature this project. We adhere to [Apache code of conduct](https://www.apache.org/foundation/policies/conduct), please follow it in all your interactions on the project.   
