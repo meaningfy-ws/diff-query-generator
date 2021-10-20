@@ -16,7 +16,7 @@ from dqgen.adapters.ap_reader import read_ap_from_csv
 from dqgen.services import INSTANCE_OPERATIONS, PROPERTIES_OPERATIONS,REIFIED_PROPERTIES_OPERATIONS
 from dqgen.services.html_template_registry import HtmlTemplateRegistry
 from dqgen.services.html_generator import HtmlGenerator
-from dqgen.services.html_templates_data_source_builder import build_datasource_for_html_template
+from dqgen.services.html_templates_data_source_builder import build_datasource_for_html_template, camel_case_to_words
 from dqgen.services.queries_generator import OUTPUT_FOLDER_PATH, APS_FOLDER_PATH
 
 
@@ -27,10 +27,11 @@ def generate_class_level_html_templates(processed_csv_file: pd.DataFrame,html_ou
 
     for cls in processed_csv_file["class"].unique():
         for operation in INSTANCE_OPERATIONS:
-            class_folder_name = cls.split(":")[1].lower()
-            output_folder_path = html_output_folder_path + "/" +class_folder_name
+            class_name = cls.split(":")[1]
+            class_folder_name = class_name.lower()
+            output_folder_path = html_output_folder_path + "/" + class_folder_name
             HtmlGenerator(cls=cls, operation=operation,
-                          class_name=processed_csv_file[processed_csv_file["class"] == cls].iloc[0]["class name"],
+                          class_name=camel_case_to_words(class_name).title(),
                           output_folder_path=output_folder_path,
                           template=HtmlTemplateRegistry().INSTANCES).to_file()
     logging.info("Generated instance html templates ...")
@@ -52,7 +53,7 @@ def generate_property_level_html_templates(processed_csv_file: pd.DataFrame, htm
                     output_folder_path = html_output_folder_path + "/" + class_folder_name
                 HtmlGenerator(cls=row["class"],
                               prop=row["property"],
-                              prop_name=row["property name"],
+                              prop_name=camel_case_to_words(row["property"].split(":")[1]).lower(),
                               operation=operation,
                               output_folder_path=output_folder_path,
                               template=HtmlTemplateRegistry().PROPERTIES).to_file()
@@ -76,7 +77,7 @@ def generate_reified_property_level_html_templates(processed_csv_file: pd.DataFr
                 HtmlGenerator(cls=row["class"],
                               prop=row["property"],
                               object_property=row["object property"],
-                              prop_name=row["property name"],
+                              prop_name=camel_case_to_words(row["property"].split(":")[1]).lower(),
                               operation=operation,
                               output_folder_path=output_folder_path,
                               template=HtmlTemplateRegistry().REIFIED_PROPERTIES).to_file()
