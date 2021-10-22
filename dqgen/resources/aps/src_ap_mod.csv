@@ -1,4 +1,4 @@
-class,property,object property,modifiable,language dependent,property_group
+class,property,object property,modifiable,language dependent,property group
 skos:Concept,skosxl:prefLabel,skosxl:literalForm,1,1,preferred labels
 skos:Concept,skosxl:prefLabel,owl:deprecated,1,,preferred labels
 skos:Concept,skosxl:prefLabel,dct:type,1,,preferred labels

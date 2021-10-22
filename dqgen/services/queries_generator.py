@@ -72,7 +72,7 @@ def generate_from_csv(ap_file_name: str, output_base_dir=OUTPUT_FOLDER_PATH, aps
     """
     output = Path(output_base_dir) / Path(ap_file_name).stem
     queries_output = output / "queries"
-    output.mkdir(parents=True, exist_ok=True)
+    queries_output.mkdir(parents=True, exist_ok=True)
 
     processed_csv_file = read_ap_from_csv(aps_folder_path / ap_file_name)
 

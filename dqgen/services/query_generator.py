@@ -45,12 +45,12 @@ class QueryGenerator:
             This method will build the file and file path for the generated query
         :return:
         """
-        return query_file_name_builder.make_query_file_name(output_folder_path=self.output_folder_path,
-                                                            operation=self.operation,
-                                                            cls=self.cls,
-                                                            prop=self.prop,
-                                                            obj_prop=self.object_property,
-                                                            file_extension=file_extension)
+        return query_file_name_builder.make_file_path(output_folder_path=self.output_folder_path,
+                                                      operation=self.operation,
+                                                      cls=self.cls,
+                                                      prop=self.prop,
+                                                      obj_prop=self.object_property,
+                                                      file_extension=file_extension)
 
     def to_file(self):
         """

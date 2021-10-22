@@ -10,10 +10,9 @@ from pathlib import Path
 from dqgen.adapters import camel_case_split
 
 
-def make_query_file_name(output_folder_path, operation, cls, prop, obj_prop, file_extension):
+def make_file_path(output_folder_path, operation, cls, prop, obj_prop, file_extension):
     """ takes a prefix with operation and a short RDF URI notation (prefix:name) and returns a filename"""
     base = Path(output_folder_path)
-    base.resolve().mkdir(exist_ok=True)
     try:
         subject = str(cls).split(":")[1]
         subject = str.lower("_".join(camel_case_split(subject)))
