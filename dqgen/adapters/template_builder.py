@@ -10,9 +10,8 @@ from jinja2 import Template
 import jinja2.environment
 
 
-def build_template(jinja2_template: str, cls: str, prop: str = None, obj_prop: str = None, lang: str = "en",
-                   version_history_graph: str = None,
-                   old_version: str = None, new_version: str = None) -> jinja2.environment.TemplateStream:
+def build_template(jinja2_template: str, cls: str, prop: str, obj_prop: str, lang: str,
+                   version_history_graph: str, old_version: str, new_version: str) -> jinja2.environment.TemplateStream:
     """
         given a jinja template and a set of (data) parameters render the template.
     :param old_version:

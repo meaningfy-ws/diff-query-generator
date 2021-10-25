@@ -25,4 +25,4 @@ test:
 # example: make generate_queries ap=skos_core.csv
 # the csv file needs to exist in the resource/aps folder
 generate_queries:
-	@ python -m dqgen.entrypoints.cli.query_generator $(ap)
+	@ python -m dqgen.entrypoints.cli.generate_queries $(ap)
