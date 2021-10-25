@@ -25,9 +25,9 @@ PREFIX xhv: <http://www.w3.org/1999/xhtml/vocab#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
 #
-# Show all added instance/property statements in the current version
+# Show all movements cross property
 #
-SELECT DISTINCT (?old_instance AS ?initialInstance) ?initialPrefLabel (?instance AS ?currentInstance) (?prefLabel as ?currentInstanceLabel) ?property ?value
+SELECT DISTINCT ?instance ?prefLabel (?property as ?oldProperty) ?newProperty ?value
 WHERE {
           GRAPH ?versionHistoryGraph {
     # parameters
@@ -59,33 +59,29 @@ WHERE {
     ?insertions a sh:SchemeDeltaInsertions ;
     sh:usingNamedGraph/sd:name ?insertionsGraph .
     }
-    # get all instances with the property and value
+    # get instance with a property and value
     GRAPH ?newVersionGraph {
 
     ?instance a ?class .
-    ?instance ?property ?value .
+    ?instance ?newProperty ?value .
     optional{
     ?instance skos:prefLabel ?prefLabel .
     FILTER (lang(?prefLabel) = "en")
     }
     }
-    # get all instances from the old version with the same property and value
+    # the instance from the old version should have another property and but same value
     GRAPH ?oldVersionGraph {
-    ?old_instance a ?class .
-    ?old_instance ?property ?value .
-    optional{
-    ?old_instance skos:prefLabel ?initialPrefLabel .
-    FILTER (lang(?initialPrefLabel) = "en")
-    }
-    }
-    # the new instance shall be inserted
-    GRAPH ?insertionsGraph {
+    ?instance a ?class .
     ?instance ?property ?value .
     }
-    # the old instance shall be inserted
-    GRAPH ?deletionsGraph {
-    ?old_instance ?property ?value .
+    # new property and value should be inserted
+    GRAPH ?insertionsGraph {
+    ?instance ?newProperty ?value .
     }
-    FILTER( ?old_instance != ?instance)
+    # the old property with value shall be deleted
+    GRAPH ?deletionsGraph {
+    ?instance ?property ?value .
+    }
+    FILTER( ?newProperty != ?property)
     }
 ORDER BY ?instance

@@ -35,9 +35,9 @@ PREFIX sh: <http://purl.org/skos-history/>
 PREFIX xhv: <http://www.w3.org/1999/xhtml/vocab#>
 
 #
-# Show all added reified structures
+# Show reified structures updated values
 #
-SELECT DISTINCT ?instance (?prefLabel as ?instanceLabel) ?property ?objProperty (?value AS ?addedValue)
+SELECT DISTINCT ?instance (?prefLabel as ?instanceLabel) ?property ?objProperty (?value AS ?oldValue) ?newValue
 WHERE {
   GRAPH ?versionHistoryGraph {
     # parameters
@@ -70,30 +70,33 @@ WHERE {
     ?insertions a sh:SchemeDeltaInsertions ;
       sh:usingNamedGraph/sd:name ?insertionsGraph .
   }
-  # get all reified structures
-  GRAPH ?insertionsGraph {
-    [] ?property ?object .
-    ?object ?objProperty ?value .
-  }
-  # ... which were not attached to some (other) instance before
-  FILTER NOT EXISTS {
-    GRAPH ?deletionsGraph {
-        [] ?property ?object .
-        ?object ?objProperty ?value .
-    }
-  }
+ # get all reified structures values
   GRAPH ?newVersionGraph {
-    # get instances having that reified structure
     ?instance a ?class .
     ?instance ?property ?object .
-    ?object ?objProperty ?value .
+    ?object ?objProperty ?newValue .
     optional {
       ?instance skos:prefLabel ?prefLabel .
-      {% if lang is defined and lang != None %}
       #restrict prefLabel to a certain language
-      FILTER (lang(?prefLabel) = "{{ lang }}")
-      {% endif %}
+      FILTER (lang(?prefLabel) = "en")
     }
   }
+  # ... which were attached to some (other) instance before and had another value
+  GRAPH ?oldVersionGraph {
+        ?instance ?property ?object .
+        ?object ?objProperty ?value .
+  }
+  # the old value shall be deleted
+  GRAPH ?deletionsGraph {
+        ?object ?objProperty ?value .
+    }
+  # the new value shall be inserted
+  GRAPH ?insertionsGraph {
+
+        ?object ?objProperty ?newValue .
+   }
+  # the language tag shall be the same
+
+  FILTER( lang(?newValue) = lang(?value) && ?newValue != ?value )
 }
-ORDER BY ?instance ?value
+ORDER BY ?instance ?newValue

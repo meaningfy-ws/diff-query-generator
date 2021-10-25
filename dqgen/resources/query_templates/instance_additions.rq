@@ -34,7 +34,7 @@ PREFIX sd: <http://www.w3.org/ns/sparql-service-description#>
 PREFIX sh: <http://purl.org/skos-history/>
 PREFIX xhv: <http://www.w3.org/1999/xhtml/vocab#>
 #
-# identify instances inserted with a certain version
+# identify added instances
 #
 SELECT distinct ?class (?instance AS ?addedInstance) (?prefLabel AS ?addedInstanceLabel)
 WHERE {

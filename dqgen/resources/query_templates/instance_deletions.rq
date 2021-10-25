@@ -34,7 +34,7 @@ PREFIX sd: <http://www.w3.org/ns/sparql-service-description#>
 PREFIX sh: <http://purl.org/skos-history/>
 PREFIX xhv: <http://www.w3.org/1999/xhtml/vocab#>
 #
-# identify concepts deleted with a certain version
+# identify deleted instances
 #
 # (In published vocabularies, the deletion of concepts should be regarded
 # as bad practice, because they still may be referenced elsewhere.
@@ -71,7 +71,7 @@ WHERE {
       dct:isPartOf ?delta ;
       sh:usingNamedGraph/sd:name ?deletionsGraph .
   }
-  # for each deleted instance, a deleted instiation statement must exist
+  # for each deleted instance, a deleted instance statement must exist
   GRAPH ?deletionsGraph {
     ?instance a ?class .
   }
@@ -85,7 +85,7 @@ WHERE {
   GRAPH ?oldVersionGraph {
     ?instance a ?class .
     {
-        ?concept skos:prefLabel ?prefLabel .
+        ?instance skos:prefLabel ?prefLabel .
         {% if lang is defined and lang != None %}
         # restrict output to a certain language
         FILTER (lang(?prefLabel) = "{{ lang }}")

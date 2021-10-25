@@ -35,7 +35,7 @@ PREFIX sh: <http://purl.org/skos-history/>
 PREFIX xhv: <http://www.w3.org/1999/xhtml/vocab#>
 
 #
-# Show all added instance/property statements in the current version
+# Show all properties value updates
 #
 SELECT DISTINCT ?instance (?prefLabel as ?instanceLabel) ?property (?old_value AS ?initialValue) (?value AS ?updatedValue)
 WHERE {
@@ -69,7 +69,7 @@ WHERE {
     ?insertions a sh:SchemeDeltaInsertions ;
       sh:usingNamedGraph/sd:name ?insertionsGraph .
   }
-  # get all property values
+  # get all property and values
   GRAPH ?newVersionGraph {
     ?instance a ?class .
     ?instance ?property ?value .

@@ -35,9 +35,9 @@ PREFIX sh: <http://purl.org/skos-history/>
 PREFIX xhv: <http://www.w3.org/1999/xhtml/vocab#>
 
 #
-# Show all added reified structures
+# Show all movements cross reified properties
 #
-SELECT DISTINCT ?instance (?prefLabel as ?instanceLabel) ?property ?objProperty (?value AS ?addedValue)
+SELECT DISTINCT ?instance (?prefLabel as ?instanceLabel) (?property as ?oldProperty) ?newProperty ?objProperty ?value
 WHERE {
   GRAPH ?versionHistoryGraph {
     # parameters
@@ -70,30 +70,33 @@ WHERE {
     ?insertions a sh:SchemeDeltaInsertions ;
       sh:usingNamedGraph/sd:name ?insertionsGraph .
   }
-  # get all reified structures
-  GRAPH ?insertionsGraph {
-    [] ?property ?object .
-    ?object ?objProperty ?value .
-  }
-  # ... which were not attached to some (other) instance before
-  FILTER NOT EXISTS {
-    GRAPH ?deletionsGraph {
-        [] ?property ?object .
-        ?object ?objProperty ?value .
-    }
-  }
-  GRAPH ?newVersionGraph {
-    # get instances having that reified structure
+    # get all instances with the property and value
+    GRAPH ?newVersionGraph {
+
     ?instance a ?class .
-    ?instance ?property ?object .
+    ?instance ?newProperty ?object .
     ?object ?objProperty ?value .
-    optional {
-      ?instance skos:prefLabel ?prefLabel .
-      {% if lang is defined and lang != None %}
-      #restrict prefLabel to a certain language
-      FILTER (lang(?prefLabel) = "{{ lang }}")
-      {% endif %}
+    optional{
+    ?instance skos:prefLabel ?prefLabel .
+    FILTER (lang(?prefLabel) = "en")
     }
-  }
-}
-ORDER BY ?instance ?value
+    }
+    # get all instances from the old version with another property but same value
+    GRAPH ?oldVersionGraph {
+    ?instance a ?class .
+    ?instance ?property ?oldObject .
+    ?oldObject ?objProperty ?value .
+    }
+    # the added reified property shall be inserted
+    GRAPH ?insertionsGraph {
+        ?instance ?newProperty ?object .
+    ?object ?objProperty ?value .
+    }
+    # the transferred reified property shall be deleted
+    GRAPH ?deletionsGraph {
+       ?instance ?property ?oldObject .
+    ?oldObject ?objProperty ?value .
+    }
+    FILTER( ?property != ?newProperty)
+    }
+ORDER BY ?instance

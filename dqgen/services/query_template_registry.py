@@ -42,5 +42,21 @@ class QueryTemplateRegistry:
         return get_query_template("property_value_updates.rq")
 
     @property
+    def REIFIED_PROPERTY_VALUE_UPDATES(self) -> str:
+        return get_query_template("reified_property_value_updates.rq")
+
+    @property
     def PROPERTY_MOVEMENT_CROSS_INSTANCE(self) -> str:
-        return get_query_template("property_movement_cross_instance.rq")
+        return get_query_template("movement_cross_instance.rq")
+
+    @property
+    def REIFIED_PROPERTY_MOVEMENT_CROSS_INSTANCE(self) -> str:
+        return get_query_template("reified_movement_cross_instance.rq")
+
+    @property
+    def PROPERTY_MOVEMENT_CROSS_PROP(self) -> str:
+        return get_query_template("movement_cross_property.rq")
+
+    @property
+    def REIFIED_PROPERTY_MOVEMENT_CROSS_PROP(self) -> str:
+        return get_query_template("reified_movement_cross_property.rq")

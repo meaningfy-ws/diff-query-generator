@@ -35,9 +35,9 @@ PREFIX sh: <http://purl.org/skos-history/>
 PREFIX xhv: <http://www.w3.org/1999/xhtml/vocab#>
 
 #
-# Show all added reified structures
+# Show all movements cross instance for reified structures
 #
-SELECT DISTINCT ?instance (?prefLabel as ?instanceLabel) ?property ?objProperty (?value AS ?addedValue)
+SELECT DISTINCT ?oldInstance ?newInstance (?oldPrefLabel as ?oldInstanceLabel) (?newPrefLabel as ?newInstanceLabel) ?property ?objProperty ?value
 WHERE {
   GRAPH ?versionHistoryGraph {
     # parameters
@@ -70,30 +70,37 @@ WHERE {
     ?insertions a sh:SchemeDeltaInsertions ;
       sh:usingNamedGraph/sd:name ?insertionsGraph .
   }
-  # get all reified structures
-  GRAPH ?insertionsGraph {
-    [] ?property ?object .
+    # get instance with the property and value
+    GRAPH ?newVersionGraph {
+
+    ?newInstance a ?class .
+    ?newInstance ?property ?object .
     ?object ?objProperty ?value .
-  }
-  # ... which were not attached to some (other) instance before
-  FILTER NOT EXISTS {
+    optional{
+    ?newInstance skos:prefLabel ?newPrefLabel .
+    FILTER (lang(?newPrefLabel) = "en")
+    }
+    }
+    # get instances from the old version with the same property and value
+    GRAPH ?oldVersionGraph {
+    ?oldInstance a ?class .
+    ?oldInstance ?property ?oldObject .
+    ?oldObject ?objProperty ?value .
+    optional{
+    ?oldInstance skos:prefLabel ?oldPrefLabel .
+    FILTER (lang(?oldPrefLabel) = "en")
+    }
+    }
+    # the new instance shall be inserted
+    GRAPH ?insertionsGraph {
+        ?newInstance ?property ?object .
+    ?object ?objProperty ?value .
+    }
+    # the old instance shall be inserted
     GRAPH ?deletionsGraph {
-        [] ?property ?object .
-        ?object ?objProperty ?value .
+       ?oldInstance ?property ?oldObject .
+    ?oldObject ?objProperty ?value .
     }
-  }
-  GRAPH ?newVersionGraph {
-    # get instances having that reified structure
-    ?instance a ?class .
-    ?instance ?property ?object .
-    ?object ?objProperty ?value .
-    optional {
-      ?instance skos:prefLabel ?prefLabel .
-      {% if lang is defined and lang != None %}
-      #restrict prefLabel to a certain language
-      FILTER (lang(?prefLabel) = "{{ lang }}")
-      {% endif %}
+    FILTER( ?newInstance != ?oldInstance)
     }
-  }
-}
-ORDER BY ?instance ?value
+ORDER BY ?newInstance
