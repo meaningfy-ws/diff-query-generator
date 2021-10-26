@@ -1,11 +1,12 @@
+from jinja2 import Template
+
 from dqgen.adapters import template_builder
 from dqgen.services.base_generator import BaseGenerator
-from dqgen.services.query_generator import QueryGenerator
 
 
 class HtmlGenerator(BaseGenerator):
 
-    def __init__(self, cls: str, operation: str, output_folder_path: str, template: str, prop: str = None,
+    def __init__(self, cls: str, operation: str, output_folder_path: str, template: Template, prop: str = None,
                  object_property: str = None, new_version_graph: str = None, old_version_graph: str = None,
                  version_history_graph: str = None, language: str = "en", class_name: str = "", prop_name: str = "",
                  obj_prop_name: str = ""):

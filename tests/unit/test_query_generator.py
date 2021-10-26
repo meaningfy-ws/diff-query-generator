@@ -1,8 +1,8 @@
 from pathlib import Path
 
 from dqgen.adapters.resource_fetcher import get_file_content
+from dqgen.services import QUERIES_TEMPLATES
 from dqgen.services.query_generator import QueryGenerator
-from dqgen.services.query_template_registry import QueryTemplateRegistry
 
 
 def test_instance_additions_generator(tmp_path):
@@ -12,9 +12,9 @@ def test_instance_additions_generator(tmp_path):
     }"""
     query_generator = QueryGenerator(cls="skos:Concept", operation="added_instance",
                                      output_folder_path=str(tmp_path),
-                                     template=QueryTemplateRegistry().INSTANCE_ADDITIONS)
+                                     template=QUERIES_TEMPLATES.get_template("instance_additions.rq"))
 
-    generated_file_path = query_generator.build_file_path(file_extension="rq")
+    generated_file_path = query_generator.build_file_path()
     print(generated_file_path)
     query_generator.to_file()
 
@@ -33,8 +33,8 @@ def test_simple_property_additions_generator(tmp_path):
     query_generator = QueryGenerator(cls="skos:Concept", operation="added_property",
                                      prop="skos:notation",
                                      output_folder_path=str(tmp_path),
-                                     template=QueryTemplateRegistry().PROPERTY_ADDITIONS)
-    generated_file_path = query_generator.build_file_path(file_extension="rq")
+                                     template=QUERIES_TEMPLATES.get_template("property_additions.rq"))
+    generated_file_path = query_generator.build_file_path()
     print(generated_file_path)
     query_generator.to_file()
 
@@ -55,8 +55,8 @@ def test_reified_property_additions_generator(tmp_path):
                                      prop="skosxl:prefLabel",
                                      object_property="skosxl:literalForm",
                                      output_folder_path=str(tmp_path),
-                                     template=QueryTemplateRegistry().REIFIED_PROPERTY_ADDITIONS)
-    generated_file_path = query_generator.build_file_path(file_extension="rq")
+                                     template=QUERIES_TEMPLATES.get_template("reified_properties_additions.rq"))
+    generated_file_path = query_generator.build_file_path()
     print(generated_file_path)
     query_generator.to_file()
 

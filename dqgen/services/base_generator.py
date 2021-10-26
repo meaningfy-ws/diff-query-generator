@@ -14,7 +14,7 @@ class BaseGenerator:
     This class will generate a file from a template file
     """
 
-    def __init__(self, cls: str, operation: str, output_folder_path: str, template: str,
+    def __init__(self, cls: str, operation: str, output_folder_path: str, template: Template,
                  prop: str = None,
                  object_property: str = None,
                  new_version_graph: str = None,

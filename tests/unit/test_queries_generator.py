@@ -24,7 +24,7 @@ def test_generate_class_level_queries(tmp_path):
 
 
 def test_generate_from_csv(tmp_path):
-    generate_from_csv(ap_file_name="skos_core.csv",output_base_dir=tmp_path, aps_folder_path=PATH_TO_APS)
+    generate_from_csv(ap_file_path= PATH_TO_APS / "skos_core.csv",output_base_dir=tmp_path)
 
     assert pathlib.Path(tmp_path).is_dir()
     assert pathlib.Path(tmp_path / "skos_core" / "queries").is_dir()

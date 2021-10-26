@@ -22,15 +22,13 @@ test:
 #-----------------------------------------------------------------------------
 # Generator commands
 #-----------------------------------------------------------------------------
-# example: make generate_queries ap=skos_core.csv
-# the csv file needs to exist in the resource/aps folder
+# example: make generate_queries ap=skos_core.csv output=./output
 generate_queries:
-	@ python -m dqgen.entrypoints.cli.generate_queries $(ap)
+	@ python -m dqgen.entrypoints.cli.generate_queries $(ap) $(output)
 
 #-----------------------------------------------------------------------------
 # Generator commands
 #-----------------------------------------------------------------------------
-# example: make generate_html_templates ap=skos_core.csv
-# the csv file needs to exist in the resource/aps folder
+# example: make generate_html_templates ap=skos_core.csv output=./output
 generate_html_templates:
-	@ python -m dqgen.entrypoints.cli.generate_html_template $(ap)
+	@ python -m dqgen.entrypoints.cli.generate_html_template $(ap) $(output)

@@ -4,6 +4,8 @@
 # Date:  30/09/2021
 # Author: Eugeniu Costetchi
 # Email: costezki.eugen@gmail.com
+from jinja2 import Template
+
 from dqgen.adapters import template_builder
 from dqgen.services.base_generator import BaseGenerator
 
@@ -13,7 +15,7 @@ class QueryGenerator(BaseGenerator):
     This class will generate a SPARQL query file from a query template file
     """
 
-    def __init__(self, cls: str, operation: str, output_folder_path: str, template: str, prop: str = None,
+    def __init__(self, cls: str, operation: str, output_folder_path: str, template: Template, prop: str = None,
                  object_property: str = None, new_version_graph: str = None, old_version_graph: str = None,
                  version_history_graph: str = None, language: str = "en"):
         super().__init__(cls, operation, output_folder_path, template, prop, object_property, new_version_graph,

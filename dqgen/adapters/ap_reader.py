@@ -8,8 +8,6 @@ import pathlib
 
 import pandas as pd
 
-from dqgen.adapters.resource_fetcher import get_file_content
-
 """
     This module is responsible for reading an application profile (for diffing) from a CSV file.
 """
