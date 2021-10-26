@@ -41,12 +41,12 @@ WHERE {
   GRAPH ?versionHistoryGraph {
     # parameters
     VALUES ( ?versionHistoryGraph ?oldVersion ?newVersion ?class ?property ?language) {
-      ( {% if versionHistoryGraph is defined and versionHistoryGraph != None %}{{ versionHistoryGraph }} {% else %}undef{% endif %}
-        {% if oldVersion is defined and oldVersion != None %}{{ oldVersion }} {% else %}undef{% endif %}
-        {% if newVersion is defined and newVersion != None %}{{ newVersion }} {% else %}undef{% endif %}
-        {% if cls is defined and cls != None %}{{ cls }} {% else %}undef{% endif %}
-        {% if prop is defined and prop != None %}{{ prop }} {% else %}undef{% endif %}
-        {% if lang is defined and lang != None %}"{{ lang }}"{% else %}undef{% endif %}
+      ( undef
+        undef
+        undef
+        skos:Concept 
+        skos:altLabel 
+        "en"
       )
     }
     # get the current and the previous version as default versions
