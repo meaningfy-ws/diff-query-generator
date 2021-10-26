@@ -1,8 +1,9 @@
 from dqgen.adapters import template_builder
+from dqgen.services.base_generator import BaseGenerator
 from dqgen.services.query_generator import QueryGenerator
 
 
-class HtmlGenerator(QueryGenerator):
+class HtmlGenerator(BaseGenerator):
 
     def __init__(self, cls: str, operation: str, output_folder_path: str, template: str, prop: str = None,
                  object_property: str = None, new_version_graph: str = None, old_version_graph: str = None,
@@ -15,8 +16,8 @@ class HtmlGenerator(QueryGenerator):
         self.prop_name = prop_name
         self.obj_prop_name = obj_prop_name
 
-    def build_query_template(self):
-        query_file = self.build_file_path(file_extension='rq').rsplit(sep='/', maxsplit=1)[1]
+    def build_template(self):
+        query_file = self.build_file_name(file_extension='rq')
         operation = self.operation.split("_")[0]
         return template_builder.build_html_template(jinja2_template=self.template, query_file=query_file,
                                                     operation=operation, cls=self.cls, prop=self.prop,

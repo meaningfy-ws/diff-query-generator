@@ -10,9 +10,7 @@ from pathlib import Path
 from dqgen.adapters import camel_case_split
 
 
-def make_file_path(output_folder_path, operation, cls, prop, obj_prop, file_extension):
-    """ takes a prefix with operation and a short RDF URI notation (prefix:name) and returns a filename"""
-    base = Path(output_folder_path)
+def make_file_name(operation, cls, prop, obj_prop, file_extension):
     try:
         subject = str(cls).split(":")[1]
         subject = str.lower("_".join(camel_case_split(subject)))
@@ -35,8 +33,13 @@ def make_file_path(output_folder_path, operation, cls, prop, obj_prop, file_exte
             file_name = f"{str.lower(operation)}_{subject}_{predicate}.{file_extension}"
     else:
         file_name = f"{str.lower(operation)}_{subject}.{file_extension}"
-    file_name = base / file_name
-    file_name.resolve()
-    return str(file_name)
+
+    return file_name
 
 
+def make_file_path(output_folder_path, file_name):
+    """ takes a prefix with operation and a short RDF URI notation (prefix:name) and returns a filename"""
+    base = Path(output_folder_path)
+    file_path = base / file_name
+    file_path.resolve()
+    return str(file_path)
