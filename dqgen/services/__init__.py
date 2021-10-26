@@ -22,6 +22,6 @@ PROPERTIES_OPERATION_TEMPLATE_MAPPING = {"added_property": QueryTemplateRegistry
 REIFIED_PROPERTIES_OPERATION_TEMPLATE_MAPPING = {"added_reified": QueryTemplateRegistry().REIFIED_PROPERTY_ADDITIONS,
                                                  "deleted_reified": QueryTemplateRegistry().REIFIED_PROPERTY_DELETIONS,
                                                  "value_update_reified": QueryTemplateRegistry().REIFIED_PROPERTY_VALUE_UPDATES,
-                                                 "reified_movement_cross_instance": QueryTemplateRegistry().PROPERTY_MOVEMENT_CROSS_INSTANCE,
-                                                 "reified_movement_cross_property": QueryTemplateRegistry().PROPERTY_MOVEMENT_CROSS_PROP
+                                                 "reified_movement_cross_instance": QueryTemplateRegistry().REIFIED_PROPERTY_MOVEMENT_CROSS_INSTANCE,
+                                                 "reified_movement_cross_property": QueryTemplateRegistry().REIFIED_PROPERTY_MOVEMENT_CROSS_PROP
                                                  }
