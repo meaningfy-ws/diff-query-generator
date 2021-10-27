@@ -10,10 +10,7 @@ from pathlib import Path
 from dqgen.adapters import camel_case_split
 
 
-def make_query_file_name(output_folder_path, operation, cls, prop, obj_prop):
-    """ takes a prefix with operation and a short RDF URI notation (prefix:name) and returns a filename"""
-    base = Path(output_folder_path)
-    base.resolve().mkdir(exist_ok=True)
+def make_file_name(operation, cls, prop, obj_prop, file_extension):
     try:
         subject = str(cls).split(":")[1]
         subject = str.lower("_".join(camel_case_split(subject)))
@@ -31,13 +28,18 @@ def make_query_file_name(output_folder_path, operation, cls, prop, obj_prop):
         object_predicate = None
     if predicate:
         if object_predicate:
-            file_name = f"{str.lower(operation)}_{subject}_{predicate}_{object_predicate}.rq"
+            file_name = f"{str.lower(operation)}_{subject}_{predicate}_{object_predicate}.{file_extension}"
         else:
-            file_name = f"{str.lower(operation)}_{subject}_{predicate}.rq"
+            file_name = f"{str.lower(operation)}_{subject}_{predicate}.{file_extension}"
     else:
-        file_name = f"{str.lower(operation)}_{subject}.rq"
-    file_name = base / file_name
-    file_name.resolve()
-    return str(file_name)
+        file_name = f"{str.lower(operation)}_{subject}.{file_extension}"
+
+    return file_name
 
 
+def make_file_path(output_folder_path, file_name):
+    """ takes a prefix with operation and a short RDF URI notation (prefix:name) and returns a filename"""
+    base = Path(output_folder_path)
+    file_path = base / file_name
+    file_path.resolve()
+    return str(file_path)

@@ -35,9 +35,9 @@ PREFIX sh: <http://purl.org/skos-history/>
 PREFIX xhv: <http://www.w3.org/1999/xhtml/vocab#>
 
 #
-# Show all added instance/property statements in the current version
+# Show all added instance/property
 #
-SELECT DISTINCT ?instance (str(?prefLabel) as ?instanceLabel) ?property (?value AS ?addedValue)
+SELECT DISTINCT ?instance (?prefLabel as ?instanceLabel) (?property as ?addedProperty) (?value AS ?addedPropertyValue)
 WHERE {
   GRAPH ?versionHistoryGraph {
     # parameters
@@ -69,13 +69,18 @@ WHERE {
     ?insertions a sh:SchemeDeltaInsertions ;
       sh:usingNamedGraph/sd:name ?insertionsGraph .
   }
-  # get all property values
+  # get inserted properties for a instance
   GRAPH ?insertionsGraph {
-    [] ?property ?value .
+    ?instance ?property [] .
   }
   # ... which were not attached to some (other) instance before
   FILTER NOT EXISTS {
     GRAPH ?deletionsGraph {
+      ?instance ?property [] .
+    }
+  }
+    FILTER NOT EXISTS {
+    GRAPH ?oldVersionGraph {
       [] ?property ?value .
     }
   }
@@ -85,10 +90,10 @@ WHERE {
     ?instance ?property ?value .
     optional {
       ?instance skos:prefLabel ?prefLabel .
-      {% if lang is defined and lang != None %}
+
       #restrict prefLabel to a certain language
-      FILTER (lang(?prefLabel) = "{{ lang }}")
-      {% endif %}
+      FILTER (lang(?prefLabel) = "en")
+
     }
   }
 }

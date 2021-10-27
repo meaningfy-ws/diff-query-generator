@@ -35,9 +35,9 @@ PREFIX sh: <http://purl.org/skos-history/>
 PREFIX xhv: <http://www.w3.org/1999/xhtml/vocab#>
 
 #
-# Show all added instance/property/object property statements in the current version
+# Show all added reified structures
 #
-SELECT DISTINCT ?instance (str(?prefLabel) as ?instanceLabel) ?property ?objProperty (?value AS ?addedValue)
+SELECT DISTINCT ?instance (?prefLabel as ?instanceLabel) ?property ?objProperty (?value AS ?addedValue)
 WHERE {
   GRAPH ?versionHistoryGraph {
     # parameters

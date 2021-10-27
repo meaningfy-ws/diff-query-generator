@@ -1,0 +1,18 @@
+{% raw %}
+{% import "macros.html" as mc %}
+{% endraw %}
+<h2 class="ui header">{{ operation|title }} {{ property_name }}s</h2>
+<section class="ui basic segment">
+    <p>The table below lists the {{ operation }} <strong>{{ property }}</strong>
+    </p>
+
+    {{ "{%" }} set content, error = from_endpoint(conf.default_endpoint).with_query_from_file(conf.query_files["{{ query_file }}"]).fetch_tabular() {{ "%}" }}
+    {% raw %}
+    {% call mc.render_fetch_results(content, error) %}
+    {% endraw %}
+
+    {{ "{{" }} mc.pandas_table(content, "{{ operation|title }} {{ property_name }}") {{ "}}" }}
+    {% raw %}
+    {% endcall %}
+    {% endraw %}
+</section>

@@ -34,9 +34,9 @@ PREFIX sd: <http://www.w3.org/ns/sparql-service-description#>
 PREFIX sh: <http://purl.org/skos-history/>
 PREFIX xhv: <http://www.w3.org/1999/xhtml/vocab#>
 #
-# Show all deleted instance/property statements in the current version
+# Show all deleted instance/property
 #
-SELECT DISTINCT ?instance (str(?prefLabel) as ?instanceLabel) ?property (?value AS ?deletedValue)
+SELECT DISTINCT ?instance (?prefLabel as ?instanceLabel) ?property (?value AS ?deletedValue)
 WHERE {
   GRAPH ?versionHistoryGraph {
     # parameters
@@ -68,26 +68,31 @@ WHERE {
     ?insertions a sh:SchemeDeltaInsertions ;
       sh:usingNamedGraph/sd:name ?insertionsGraph .
   }
-  # get all deleted propoerty values
+  # get all deleted property values
   GRAPH ?deletionsGraph {
-    [] ?property ?value .
+    ?instance ?property [] .
   }
   # ... which were not attached to some (other) instance now
   FILTER NOT EXISTS {
     GRAPH ?insertionsGraph {
-      [] ?property ?value .
+     ?instance ?property [] .
     }
   }
+  # the instance should still exist
+    GRAPH ?newVersionGraph {
+    ?instance ?anotherProp [] .
+
+  }
   GRAPH ?oldVersionGraph {
-    # get instances
+    # get instances with those property values
     ?instance a ?class .
     ?instance ?property ?value .
     optional {
       ?instance skos:prefLabel ?prefLabel .
-      {% if lang is defined and lang != None %}
+
       #restrict prefLabel to a certain language
-      FILTER (lang(?prefLabel) = "{{ lang }}")
-      {% endif %}
+      FILTER (lang(?prefLabel) = "en")
+
     }
   }
 }

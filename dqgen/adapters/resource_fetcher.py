@@ -16,8 +16,6 @@ except ImportError:
     # Try backported to PY<37 `importlib_resources`.
     import importlib_resources as pkg_resources
 
-from dqgen.resources import query_templates
-
 
 def get_file_content(resource_path: str) -> str:
     """
@@ -27,13 +25,3 @@ def get_file_content(resource_path: str) -> str:
     """
     path = pathlib.Path(resource_path).resolve()
     return path.read_text()
-
-
-def get_query_template(query_file_name: str) -> str:
-    """
-        Given query template file name, read the file and return it as a string.
-    :param query_file_name:
-    :return:
-    """
-    with pkg_resources.path(query_templates, query_file_name) as path:
-        return path.read_text()

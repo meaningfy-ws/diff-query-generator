@@ -1,0 +1,99 @@
+@prefix : <http://query-differ-dsB#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix skosxl: <http://www.w3.org/2008/05/skos-xl#> .
+
+<http://query-differ-dsB> a owl:Ontology .
+
+:conceptScheme_db42e10b a skos:ConceptScheme;
+  skosxl:prefLabel :xl_en_f39d85b1 .
+
+:xl_en_f39d85b1 a skosxl:Label;
+  skosxl:literalForm "dsb"@en .
+
+:c_ca102086 a skos:Concept;
+  skos:inScheme :conceptScheme_db42e10b;
+  skos:topConceptOf :conceptScheme_db42e10b;
+  skosxl:altLabel :xl_en_63123ed3;
+  skosxl:prefLabel :xl_en_9ca64bc8, :xl_fr_1b992ef2, :xl_ru_f75f5f40 .
+
+:xl_en_9ca64bc8 a skosxl:Label;
+  skosxl:literalForm "concept1"@en .
+
+:c_dbcf3a58 a skos:Concept;
+  skos:inScheme :conceptScheme_db42e10b;
+  skos:topConceptOf :conceptScheme_db42e10b;
+  skosxl:altLabel :xl_fi_9a8c59ea .
+
+:c_76f13601 a skos:Concept;
+  skos:inScheme :conceptScheme_db42e10b;
+  skos:topConceptOf :conceptScheme_db42e10b;
+  skosxl:altLabel :xl_en_32bc1bfc;
+  skosxl:prefLabel :xl_en_59d975cb, :xl_fa_7edbd89b .
+
+:xl_fa_7edbd89b a skosxl:Label;
+  skosxl:literalForm "oldConcept4fa"@fa .
+
+:c_1ea42ca1 a skos:Concept;
+  skos:inScheme :conceptScheme_db42e10b;
+  skos:topConceptOf :conceptScheme_db42e10b;
+  skosxl:altLabel :xl_en_f1990bfe;
+  skosxl:prefLabel :xl_en_cd22e0d1, :xl_es_a859f6fd .
+
+:xl_en_cd22e0d1 a skosxl:Label;
+  skosxl:literalForm "concept3"@en .
+
+:xl_en_59d975cb a skosxl:Label;
+  skosxl:literalForm "concept4"@en .
+
+:c_9ebe795b a skos:Concept;
+  skos:inScheme :conceptScheme_db42e10b;
+  skos:topConceptOf :conceptScheme_db42e10b;
+  skosxl:altLabel :xl_fr_c6b9a9d3, :xl_ga_1411efd8 .
+
+:xl_ga_1411efd8 a skosxl:Label;
+  skosxl:literalForm "oldAltLabelConcept5ga"@ga .
+
+:xl_ru_f75f5f40 a skosxl:Label;
+  skosxl:literalForm "concept1ru"@ru .
+
+:xl_fr_1b992ef2 a skosxl:Label;
+  skosxl:literalForm "oldConcept1fr"@fr .
+
+:xl_en_63123ed3 a skosxl:Label;
+  skosxl:literalForm "oldAltLabelConcept1"@en .
+
+:xl_fr_c6b9a9d3 a skosxl:Label;
+  skosxl:literalForm "altLabelConcept5fr"@fr .
+
+:xl_en_32bc1bfc a skosxl:Label;
+  skosxl:literalForm "altLabelConcept4"@en .
+
+:xl_fi_9a8c59ea a skosxl:Label;
+  skosxl:literalForm "altLabelConcept2fi"@fi .
+
+:xl_es_a859f6fd a skosxl:Label;
+  skosxl:literalForm "concept3es"@es .
+
+:c_87097344 a skos:Concept;
+  skos:inScheme :conceptScheme_db42e10b;
+  skos:topConceptOf :conceptScheme_db42e10b;
+  skosxl:prefLabel :xl_en_cc100f42 .
+
+:xl_en_cc100f42 a skosxl:Label;
+  skosxl:literalForm "concept6"@en .
+
+:c_884e595c a skos:Concept;
+  skos:inScheme :conceptScheme_db42e10b;
+  skos:topConceptOf :conceptScheme_db42e10b;
+  skosxl:prefLabel :xl_en_69060e9e, :xl_es_b5eca024 .
+
+:xl_en_69060e9e a skosxl:Label;
+  skosxl:literalForm "concept7"@en .
+
+:xl_en_f1990bfe a skosxl:Label;
+  skosxl:literalForm "altLabelConcept3"@en .
+
+:xl_es_b5eca024 a skosxl:Label;
+  skosxl:literalForm "concept7es"@es .

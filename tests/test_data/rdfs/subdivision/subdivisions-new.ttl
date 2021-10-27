@@ -864,7 +864,7 @@
         "unummererede afsnit"@da,
         "nicht nummerierter Absatz"@de,
         "εδάφιο"@el,
-        "unnumbered paragraph"@en,
+        "unnumbered paragraphutuimasancur"@en,
         "párrafo"@es,
         "lõik"@et,
         "numeroimaton kohta"@fi,
@@ -879,7 +879,7 @@
         "alinea"@nl,
         "nienumerowane akapity"@pl,
         "parágrafo"@pt,
-        "paragraf"@ro,
+        "paragrafutuimasancur"@ro,
         "neočíslovaný odsek"@sk,
         "neoštevilčeni odstavek"@sl,
         "stycke"@sv ;
