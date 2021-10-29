@@ -24,9 +24,7 @@ PREFIX vb: <http://art.uniroma2.it/ontologies/vocbench#>
 PREFIX xhv: <http://www.w3.org/1999/xhtml/vocab#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
-#
 # Show all movements cross property
-#
 SELECT DISTINCT ?instance ?prefLabel (?property as ?oldProperty) ?newProperty ?value
 WHERE {
           GRAPH ?versionHistoryGraph {
