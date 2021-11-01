@@ -7,6 +7,9 @@
     <p>The report is primarily focused on the concept instances (skos:Concept), and does not cover other classes as they
         may occur (e.g. skos:ConceptScheme, skosxl:Label, euvoc:XlNote etc.).</p>
     <p>This is a beta version of the report and is subject to changes.</p>
+{% raw %}
+{% include "statistics.html" %}
+{% endraw %}
 {% for class_key , class_data in data_source.items() %}
     <h1>{{ class_data.label }}</h1>
     {% if class_data.description is not undefined %}
@@ -14,12 +17,10 @@
     {% endif %}
     {% for instance_change_file in class_data.instance_changes.files %}
         {{ "{% include " }}"{{ instance_change_file }}"{{ " with context %}" }}
-        {#       {% include "prop_group_section.jinja2" with context %}#}
     {% endfor %}
     {% for prop_group, prop_group_data in class_data.prop_groups.items() %}
-{#       {% include "prop_group_section.jinja2" ignore missing with context %}#}
         <h2>{{ prop_group_data.label }}</h2>
-        {% for prop_file in prop_group_data.files %}
+        {% for prop_file in prop_group_data.detail_queries %}
             {{ "{% include " }}"{{ prop_file }}"{{ " with context %}" }}
         {% endfor %}
     {% endfor %}

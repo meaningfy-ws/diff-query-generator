@@ -1,0 +1,42 @@
+{% raw %}
+{% import "macros.html" as mc %}
+{% endraw %}
+<h1 class="ui header">Statistics</h1>
+<section class="ui basic segment">
+    {% for class_key , class_data in data_source.items() %}
+        <h2>{{ class_data.label }}</h2>
+        {% if class_data.description is not undefined %}
+            <p>{{ class_data.description }}</p>
+        {% endif %}
+
+        <table class="display">
+            <thead class="center aligned">
+            <tr>
+                <th>Added</th>
+                <th>Deleted</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                {% for count_query in class_data.instance_changes.count_queries %}
+                    {{ "{%" }} set content, error = from_endpoint(conf.default_endpoint).with_query_from_file(conf.query_files["{{ count_query }}"]).fetch_tabular() {{ "%}" }}
+                    {% raw %}
+                    {% call mc.render_fetch_results(content, error) %}
+
+                    {{ mc.count_value(content) }}
+                    {% endcall %}
+                    {% endraw %}
+                {% endfor %}
+            </tr>
+            </tbody>
+        </table>
+        {% for prop_group, prop_group_data in class_data.prop_groups.items() %}
+            <h3>{{ prop_group_data.label }}</h3>
+            {% for index ,count_prop_section in prop_group_data.count_queries.items() %}
+                {% include "statistics_prop_section.jinja2" with context %}
+            {% endfor %}
+        {% endfor %}
+
+
+    {% endfor %}
+</section>
