@@ -20,7 +20,7 @@
     {% endfor %}
     {% for prop_group, prop_group_data in class_data.prop_groups.items() %}
         <h2>{{ prop_group_data.label }}</h2>
-        {% for prop_file in prop_group_data.detail_queries %}
+        {% for prop_file in prop_group_data.query_template_file_paths %}
             {{ "{% include " }}"{{ prop_file }}"{{ " with context %}" }}
         {% endfor %}
     {% endfor %}
