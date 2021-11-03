@@ -16,7 +16,7 @@ from dqgen.adapters.ap_reader import read_ap_from_csv
 
 
 from dqgen.services import INSTANCE_OPERATIONS, PROPERTIES_OPERATIONS, REIFIED_PROPERTIES_OPERATIONS, HTML_TEMPLATES, \
-    PATH_TO_STATIC_FOLDER
+    PATH_TO_STATIC_FOLDER, TEMPLATE_AND_HTML_FILE_NAME_MAPPING
 from dqgen.services.html_generator import HtmlGenerator
 from dqgen.services.html_templates_data_source_builder import build_datasource_for_html_template, camel_case_to_words
 from dqgen.services.validate_application_profile import validate_application_profile
@@ -90,17 +90,19 @@ def generate_reified_property_level_html_templates(processed_csv_file: pd.DataFr
     logging.info("Generated reified property html templates ...")
 
 
-def generate_main_html(processed_csv_file: pd.DataFrame, html_output_folder_path):
+def generate_html_template(processed_csv_file: pd.DataFrame, html_output_folder_path, template, file_name):
     """
-    Builds main.html page and puts into a specified folder
+    Builds a html page and puts into a specified folder
+    :param file_name:
+    :param template:
     :param processed_csv_file:
     :param html_output_folder_path:
     :return:
     """
 
     data_source = build_datasource_for_html_template(processed_csv_file=processed_csv_file)
-    build_template = HTML_TEMPLATES.get_template("main.jinja2").stream(data_source=data_source)
-    build_template.dump(html_output_folder_path + "/" + "main.html")
+    build_template = template.stream(data_source=data_source)
+    build_template.dump(html_output_folder_path + "/" + file_name)
 
 
 def copy_files_from_static_folder(file_list: list, destination_folder: str):
@@ -129,7 +131,9 @@ def generate_html_templates_from_csv(ap_file_path: pathlib.Path, output_base_dir
                                            html_output_folder_path=str(html_output))
     generate_reified_property_level_html_templates(processed_csv_file=processed_csv_file,
                                                    html_output_folder_path=str(html_output))
-    generate_main_html(processed_csv_file=processed_csv_file,
-                       html_output_folder_path=str(html_output))
 
-    copy_tree(PATH_TO_STATIC_FOLDER,str(html_output))
+    for file_name, template in TEMPLATE_AND_HTML_FILE_NAME_MAPPING.items():
+        generate_html_template(processed_csv_file=processed_csv_file,
+                               html_output_folder_path=str(html_output), template=template, file_name=file_name)
+
+    copy_tree(PATH_TO_STATIC_FOLDER, str(html_output))

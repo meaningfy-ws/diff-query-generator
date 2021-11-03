@@ -36,3 +36,6 @@ INSTANCE_OPERATIONS = ["added_instance", "deleted_instance"]
 PROPERTIES_OPERATIONS = ["added_property", "deleted_property", "updated_property", "moved_property", "changed_property"]
 REIFIED_PROPERTIES_OPERATIONS = ["added_reified", "deleted_reified", "updated_reified", "moved_reified",
                                  "changed_reified"]
+
+TEMPLATE_AND_HTML_FILE_NAME_MAPPING = {"main.html": HTML_TEMPLATES.get_template("main.jinja2"),
+                                       "statistics.html": HTML_TEMPLATES.get_template("statistics.jinja2")}

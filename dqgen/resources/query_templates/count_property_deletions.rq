@@ -33,19 +33,17 @@ PREFIX dsv: <http://purl.org/iso25964/DataSet/Versioning#>
 PREFIX sd: <http://www.w3.org/ns/sparql-service-description#>
 PREFIX sh: <http://purl.org/skos-history/>
 PREFIX xhv: <http://www.w3.org/1999/xhtml/vocab#>
-
-# Show all added reified structures
-SELECT DISTINCT ?instance (?prefLabel as ?instanceLabel) ?property ?objProperty (?value AS ?addedValue)
+# Show all deleted instance/property
+SELECT (count(*) as ?entries)
 WHERE {
   GRAPH ?versionHistoryGraph {
     # parameters
-    VALUES ( ?versionHistoryGraph ?oldVersion ?newVersion ?class ?property ?objProperty ?language) {
+    VALUES ( ?versionHistoryGraph ?oldVersion ?newVersion ?class ?property ?language) {
       ( {% if versionHistoryGraph is defined and versionHistoryGraph != None %}{{ versionHistoryGraph }} {% else %}undef{% endif %}
-        {% if oldVersion is defined and oldVersion != None %}{{ oldVersion }}{% else %}undef{% endif %}
-        {% if newVersion is defined and newVersion != None %}{{ newVersion }}{% else %}undef{% endif %}
-        {% if cls is defined and cls != None %}{{ cls }}{% else %}undef{% endif %}
-        {% if prop is defined and prop != None %}{{ prop }}{% else %}undef{% endif %}
-        {% if obj_prop is defined and obj_prop != None %}{{ obj_prop }}{% else %}undef{% endif %}
+        {% if oldVersion is defined and oldVersion != None %}{{ oldVersion }} {% else %}undef{% endif %}
+        {% if newVersion is defined and newVersion != None %}{{ newVersion }} {% else %}undef{% endif %}
+        {% if cls is defined and cls != None %}{{ cls }} {% else %}undef{% endif %}
+        {% if prop is defined and prop != None %}{{ prop }} {% else %}undef{% endif %}
         {% if lang is defined and lang != None %}"{{ lang }}"{% else %}undef{% endif %}
       )
     }
@@ -68,30 +66,31 @@ WHERE {
     ?insertions a sh:SchemeDeltaInsertions ;
       sh:usingNamedGraph/sd:name ?insertionsGraph .
   }
-  # get all reified structures
-  GRAPH ?insertionsGraph {
-    [] ?property ?object .
-    ?object ?objProperty ?value .
+  # get all deleted property values
+  GRAPH ?deletionsGraph {
+    ?instance ?property [] .
   }
-  # ... which were not attached to some (other) instance before
+  # ... which were not attached to some (other) instance now
   FILTER NOT EXISTS {
-    GRAPH ?deletionsGraph {
-        [] ?property ?object .
-        ?object ?objProperty ?value .
+    GRAPH ?insertionsGraph {
+     ?instance ?property [] .
     }
   }
-  GRAPH ?newVersionGraph {
-    # get instances having that reified structure
+  # the instance should still exist
+    GRAPH ?newVersionGraph {
+    ?instance ?anotherProp [] .
+
+  }
+  GRAPH ?oldVersionGraph {
+    # get instances with those property values
     ?instance a ?class .
-    ?instance ?property ?object .
-    ?object ?objProperty ?value .
+    ?instance ?property ?value .
     optional {
       ?instance skos:prefLabel ?prefLabel .
-      {% if lang is defined and lang != None %}
+
       #restrict prefLabel to a certain language
-      FILTER (lang(?prefLabel) = "{{ lang }}")
-      {% endif %}
+      FILTER (lang(?prefLabel) = "en")
+
     }
   }
 }
-ORDER BY ?instance ?value

@@ -33,13 +33,13 @@ PREFIX dsv: <http://purl.org/iso25964/DataSet/Versioning#>
 PREFIX sd: <http://www.w3.org/ns/sparql-service-description#>
 PREFIX sh: <http://purl.org/skos-history/>
 PREFIX xhv: <http://www.w3.org/1999/xhtml/vocab#>
-#
+
 # identify deleted instances
-#
+
 # (In published vocabularies, the deletion of concepts should be regarded
 # as bad practice, because they still may be referenced elsewhere.
 # Cosider using owl:deprecated instead)
-#
+
 SELECT distinct ?class (?instance AS ?deletedInstance) (?prefLabel AS ?deletedInstanceLabel)
 WHERE {
   GRAPH ?versionHistoryGraph {

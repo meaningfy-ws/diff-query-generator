@@ -24,8 +24,8 @@ PREFIX vb: <http://art.uniroma2.it/ontologies/vocbench#>
 PREFIX xhv: <http://www.w3.org/1999/xhtml/vocab#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
-# Show all movements cross property
-SELECT DISTINCT ?instance ?prefLabel (?property as ?oldProperty) ?newProperty ?value
+# Show all movements cross instances
+SELECT (count(*) as ?entries)
 WHERE {
           GRAPH ?versionHistoryGraph {
     # parameters
@@ -57,29 +57,32 @@ WHERE {
     ?insertions a sh:SchemeDeltaInsertions ;
     sh:usingNamedGraph/sd:name ?insertionsGraph .
     }
-    # get instance with a property and value
+    # get new instance with the property and value
     GRAPH ?newVersionGraph {
 
     ?instance a ?class .
-    ?instance ?newProperty ?value .
+    ?instance ?property ?value .
     optional{
     ?instance skos:prefLabel ?prefLabel .
     FILTER (lang(?prefLabel) = "en")
     }
     }
-    # the instance from the old version should have another property and but same value
+    # get all instances from the old version with the same property and value
     GRAPH ?oldVersionGraph {
-    ?instance a ?class .
-    ?instance ?property ?value .
+    ?oldInstance a ?class .
+    ?oldInstance ?property ?value .
+    optional{
+    ?oldInstance skos:prefLabel ?initialPrefLabel .
+    FILTER (lang(?initialPrefLabel) = "en")
     }
-    # new property and value should be inserted
+    }
+    # the new instance shall be inserted
     GRAPH ?insertionsGraph {
-    ?instance ?newProperty ?value .
-    }
-    # the old property with value shall be deleted
-    GRAPH ?deletionsGraph {
     ?instance ?property ?value .
     }
-    FILTER( ?newProperty != ?property)
+    # the old instance shall be inserted
+    GRAPH ?deletionsGraph {
+    ?oldInstance ?property ?value .
     }
-ORDER BY ?instance
+    FILTER( ?oldInstance != ?instance)
+    }

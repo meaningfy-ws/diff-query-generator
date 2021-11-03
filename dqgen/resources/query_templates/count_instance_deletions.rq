@@ -34,20 +34,23 @@ PREFIX sd: <http://www.w3.org/ns/sparql-service-description#>
 PREFIX sh: <http://purl.org/skos-history/>
 PREFIX xhv: <http://www.w3.org/1999/xhtml/vocab#>
 
-# Show all added reified structures
-SELECT DISTINCT ?instance (?prefLabel as ?instanceLabel) ?property ?objProperty (?value AS ?addedValue)
+# identify deleted instances
+
+# (In published vocabularies, the deletion of concepts should be regarded
+# as bad practice, because they still may be referenced elsewhere.
+# Cosider using owl:deprecated instead)
+
+SELECT (count(*) as ?entries)
 WHERE {
   GRAPH ?versionHistoryGraph {
     # parameters
-    VALUES ( ?versionHistoryGraph ?oldVersion ?newVersion ?class ?property ?objProperty ?language) {
-      ( {% if versionHistoryGraph is defined and versionHistoryGraph != None %}{{ versionHistoryGraph }} {% else %}undef{% endif %}
-        {% if oldVersion is defined and oldVersion != None %}{{ oldVersion }}{% else %}undef{% endif %}
-        {% if newVersion is defined and newVersion != None %}{{ newVersion }}{% else %}undef{% endif %}
-        {% if cls is defined and cls != None %}{{ cls }}{% else %}undef{% endif %}
-        {% if prop is defined and prop != None %}{{ prop }}{% else %}undef{% endif %}
-        {% if obj_prop is defined and obj_prop != None %}{{ obj_prop }}{% else %}undef{% endif %}
-        {% if lang is defined and lang != None %}"{{ lang }}"{% else %}undef{% endif %}
-      )
+    VALUES ( ?versionHistoryGraph ?oldVersion ?newVersion ?class ?language ) {
+        ( {% if versionHistoryGraph is defined and versionHistoryGraph != None %}{{ versionHistoryGraph }} {% else %}undef{% endif %}
+          {% if oldVersion is defined and oldVersion != None %}{{ oldVersion }} {% else %}undef{% endif %}
+          {% if newVersion is defined and newVersion != None %}{{ newVersion }} {% else %}undef{% endif %}
+          {% if cls is defined and cls != None %}{{ cls }} {% else %}undef{% endif %}
+          {% if lang is defined and lang != None %}"{{ lang }}"{% else %}undef{% endif %}
+        )
     }
     # get the current and the previous version as default versions
     ?versionset dsv:currentVersionRecord/xhv:prev/dc:identifier ?previousVersion .
@@ -60,38 +63,33 @@ WHERE {
       sh:deltaFrom/dc:identifier ?oldVersionSelected ;
       sh:deltaTo/dc:identifier ?newVersionSelected ;
       sh:deltaFrom/sh:usingNamedGraph/sd:name ?oldVersionGraph ;
-      sh:deltaTo/sh:usingNamedGraph/sd:name ?newVersionGraph ;
-      dct:hasPart ?insertions ;
-      dct:hasPart ?deletions .
-    ?deletions a sh:SchemeDeltaDeletions ;
-      sh:usingNamedGraph/sd:name ?deletionsGraph .
+      sh:deltaTo/sh:usingNamedGraph/sd:name ?newVersionGraph .
     ?insertions a sh:SchemeDeltaInsertions ;
+      dct:isPartOf ?delta ;
       sh:usingNamedGraph/sd:name ?insertionsGraph .
+    ?deletions a sh:SchemeDeltaDeletions ;
+      dct:isPartOf ?delta ;
+      sh:usingNamedGraph/sd:name ?deletionsGraph .
   }
-  # get all reified structures
-  GRAPH ?insertionsGraph {
-    [] ?property ?object .
-    ?object ?objProperty ?value .
+  # for each deleted instance, a deleted instance statement must exist
+  GRAPH ?deletionsGraph {
+    ?instance a ?class .
   }
-  # ... which were not attached to some (other) instance before
+  # ... without anything remaining for this instance in the current version
   FILTER NOT EXISTS {
-    GRAPH ?deletionsGraph {
-        [] ?property ?object .
-        ?object ?objProperty ?value .
+    GRAPH ?newVersionGraph {
+      ?instance ?p []
     }
   }
-  GRAPH ?newVersionGraph {
-    # get instances having that reified structure
+  # get the label
+  GRAPH ?oldVersionGraph {
     ?instance a ?class .
-    ?instance ?property ?object .
-    ?object ?objProperty ?value .
-    optional {
-      ?instance skos:prefLabel ?prefLabel .
-      {% if lang is defined and lang != None %}
-      #restrict prefLabel to a certain language
-      FILTER (lang(?prefLabel) = "{{ lang }}")
-      {% endif %}
+    {
+        ?instance skos:prefLabel ?prefLabel .
+        {% if lang is defined and lang != None %}
+        # restrict output to a certain language
+        FILTER (lang(?prefLabel) = "{{ lang }}")
+        {% endif %}
     }
   }
 }
-ORDER BY ?instance ?value
