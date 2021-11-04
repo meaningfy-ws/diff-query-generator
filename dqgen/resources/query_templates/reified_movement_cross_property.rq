@@ -35,18 +35,17 @@ PREFIX sh: <http://purl.org/skos-history/>
 PREFIX xhv: <http://www.w3.org/1999/xhtml/vocab#>
 
 # Show all movements cross reified properties
-SELECT DISTINCT ?instance (?prefLabel as ?instanceLabel) (?property as ?oldProperty) ?newProperty ?objProperty ?value
+SELECT DISTINCT ?instance ?prefLabel ?oldProperty ?newProperty ?objProperty ?value
 WHERE {
   GRAPH ?versionHistoryGraph {
     # parameters
-    VALUES ( ?versionHistoryGraph ?oldVersion ?newVersion ?class ?property ?objProperty ?language) {
+    VALUES ( ?versionHistoryGraph ?oldVersion ?newVersion ?class ?oldProperty ?objProperty) {
       ( {% if versionHistoryGraph is defined and versionHistoryGraph != None %}{{ versionHistoryGraph }} {% else %}undef{% endif %}
         {% if oldVersion is defined and oldVersion != None %}{{ oldVersion }}{% else %}undef{% endif %}
         {% if newVersion is defined and newVersion != None %}{{ newVersion }}{% else %}undef{% endif %}
         {% if cls is defined and cls != None %}{{ cls }}{% else %}undef{% endif %}
         {% if prop is defined and prop != None %}{{ prop }}{% else %}undef{% endif %}
         {% if obj_prop is defined and obj_prop != None %}{{ obj_prop }}{% else %}undef{% endif %}
-        {% if lang is defined and lang != None %}"{{ lang }}"{% else %}undef{% endif %}
       )
     }
     # get the current and the previous version as default versions
@@ -74,15 +73,20 @@ WHERE {
     ?instance a ?class .
     ?instance ?newProperty ?object .
     ?object ?objProperty ?value .
-    optional{
-    ?instance skos:prefLabel ?prefLabel .
-    FILTER (lang(?prefLabel) = "en")
+    {% for lang in languages %}
+    optional {
+      ?instance skos:prefLabel ?prefLabel{{lang|title}} .
+      FILTER (lang(?prefLabel{{lang|title}}) = "{{ lang }}")
     }
+    {% endfor %}
+    BIND(COALESCE({% for lang in languages -%}
+                   ?prefLabel{{lang|title}}{{ ", " if not loop.last else "" }}
+                   {%- endfor -%}) as ?prefLabel)
     }
     # get all instances from the old version with another property but same value
     GRAPH ?oldVersionGraph {
     ?instance a ?class .
-    ?instance ?property ?oldObject .
+    ?instance ?oldProperty ?oldObject .
     ?oldObject ?objProperty ?value .
     }
     # the added reified property shall be inserted
@@ -92,9 +96,9 @@ WHERE {
     }
     # the transferred reified property shall be deleted
     GRAPH ?deletionsGraph {
-       ?instance ?property ?oldObject .
+       ?instance ?oldProperty ?oldObject .
     ?oldObject ?objProperty ?value .
     }
-    FILTER( ?property != ?newProperty)
+    FILTER( ?oldProperty != ?newProperty)
     }
 ORDER BY ?instance

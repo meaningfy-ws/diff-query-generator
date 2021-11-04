@@ -40,16 +40,15 @@ PREFIX xhv: <http://www.w3.org/1999/xhtml/vocab#>
 # as bad practice, because they still may be referenced elsewhere.
 # Cosider using owl:deprecated instead)
 
-SELECT distinct ?class (?instance AS ?deletedInstance) (?prefLabel AS ?deletedInstanceLabel)
+SELECT distinct ?class ?instance ?prefLabel
 WHERE {
   GRAPH ?versionHistoryGraph {
     # parameters
-    VALUES ( ?versionHistoryGraph ?oldVersion ?newVersion ?class ?language ) {
+    VALUES ( ?versionHistoryGraph ?oldVersion ?newVersion ?class ) {
         ( {% if versionHistoryGraph is defined and versionHistoryGraph != None %}{{ versionHistoryGraph }} {% else %}undef{% endif %}
           {% if oldVersion is defined and oldVersion != None %}{{ oldVersion }} {% else %}undef{% endif %}
           {% if newVersion is defined and newVersion != None %}{{ newVersion }} {% else %}undef{% endif %}
           {% if cls is defined and cls != None %}{{ cls }} {% else %}undef{% endif %}
-          {% if lang is defined and lang != None %}"{{ lang }}"{% else %}undef{% endif %}
         )
     }
     # get the current and the previous version as default versions
@@ -84,13 +83,17 @@ WHERE {
   # get the label
   GRAPH ?oldVersionGraph {
     ?instance a ?class .
-    {
-        ?instance skos:prefLabel ?prefLabel .
-        {% if lang is defined and lang != None %}
-        # restrict output to a certain language
-        FILTER (lang(?prefLabel) = "{{ lang }}")
-        {% endif %}
+
+    {% for lang in languages %}
+    optional {
+      ?instance skos:prefLabel ?prefLabel{{lang|title}} .
+      FILTER (lang(?prefLabel{{lang|title}}) = "{{ lang }}")
     }
+    {% endfor %}
+    BIND(COALESCE({% for lang in languages -%}
+                   ?prefLabel{{lang|title}}{{ ", " if not loop.last else "" }}
+                   {%- endfor -%}) as ?prefLabel)
+
   }
 }
 ORDER BY ?instance

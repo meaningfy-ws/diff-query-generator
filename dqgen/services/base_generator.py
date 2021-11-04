@@ -7,6 +7,7 @@
 from jinja2 import Template
 
 from dqgen.adapters import file_name_builder
+from dqgen.services import QUERY_FALLBACK_LANGUAGES
 
 
 class BaseGenerator:
@@ -20,7 +21,7 @@ class BaseGenerator:
                  new_version_graph: str = None,
                  old_version_graph: str = None,
                  version_history_graph: str = None,
-                 language: str = "en"):
+                 languages: list = QUERY_FALLBACK_LANGUAGES):
         self.cls = cls
         self.operation = operation
         self.output_folder_path = output_folder_path
@@ -30,7 +31,7 @@ class BaseGenerator:
         self.new_version_graph = new_version_graph
         self.old_version_graph = old_version_graph
         self.version_history_graph = version_history_graph
-        self.language = language
+        self.languages = languages
         self.file_extension = "base"
 
     def build_template(self):

@@ -35,17 +35,16 @@ PREFIX sh: <http://purl.org/skos-history/>
 PREFIX xhv: <http://www.w3.org/1999/xhtml/vocab#>
 
 # Show all properties value updates
-SELECT DISTINCT ?instance (?prefLabel as ?instanceLabel) ?property (?old_value AS ?initialValue) (?value AS ?updatedValue)
+SELECT DISTINCT ?instance ?prefLabel ?property ?oldValue ?newValue
 WHERE {
   GRAPH ?versionHistoryGraph {
     # parameters
-    VALUES ( ?versionHistoryGraph ?oldVersion ?newVersion ?class ?property ?language) {
+    VALUES ( ?versionHistoryGraph ?oldVersion ?newVersion ?class ?property ) {
       ( {% if versionHistoryGraph is defined and versionHistoryGraph != None %}{{ versionHistoryGraph }} {% else %}undef{% endif %}
         {% if oldVersion is defined and oldVersion != None %}{{ oldVersion }} {% else %}undef{% endif %}
         {% if newVersion is defined and newVersion != None %}{{ newVersion }} {% else %}undef{% endif %}
         {% if cls is defined and cls != None %}{{ cls }} {% else %}undef{% endif %}
         {% if prop is defined and prop != None %}{{ prop }} {% else %}undef{% endif %}
-        {% if lang is defined and lang != None %}"{{ lang }}"{% else %}undef{% endif %}
       )
     }
     # get the current and the previous version as default versions
@@ -70,28 +69,32 @@ WHERE {
   # get all property and values
   GRAPH ?newVersionGraph {
     ?instance a ?class .
-    ?instance ?property ?value .
+    ?instance ?property ?newValue .
+    {% for lang in languages %}
     optional {
-      ?instance skos:prefLabel ?prefLabel .
-      #restrict prefLabel to a certain language
-      FILTER (lang(?prefLabel) = "en")
+      ?instance skos:prefLabel ?prefLabel{{lang|title}} .
+      FILTER (lang(?prefLabel{{lang|title}}) = "{{ lang }}")
     }
+    {% endfor %}
+    BIND(COALESCE({% for lang in languages -%}
+                   ?prefLabel{{lang|title}}{{ ", " if not loop.last else "" }}
+                   {%- endfor -%}) as ?prefLabel)
   }
   # ... which were attached to some (other) instance before and had another value
   GRAPH ?oldVersionGraph {
-      ?instance ?property ?old_value .
+      ?instance ?property ?oldValue .
   }
   # the old value shall be deleted
   GRAPH ?deletionsGraph {
-      ?instance ?property ?old_value .
+      ?instance ?property ?oldValue .
     }
   # the new value shall be inserted
   GRAPH ?insertionsGraph {
-      ?instance ?property ?value .
+      ?instance ?property ?newValue .
    }
   # the language tag shall be the same
 
-  FILTER( lang(?old_value) = lang(?value) && ?old_value != ?value )
+  FILTER( lang(?oldValue) = lang(?newValue) && ?oldValue != ?newValue )
 
 }
-ORDER BY ?instance ?value
+ORDER BY ?instance

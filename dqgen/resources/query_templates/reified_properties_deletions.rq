@@ -34,11 +34,11 @@ PREFIX sd: <http://www.w3.org/ns/sparql-service-description#>
 PREFIX sh: <http://purl.org/skos-history/>
 PREFIX xhv: <http://www.w3.org/1999/xhtml/vocab#>
 # Show all deleted reified structures
-SELECT DISTINCT ?instance (?prefLabel as ?instanceLabel) ?property ?objProperty (?value AS ?deletedValue)
+SELECT DISTINCT ?instance ?prefLabel ?oldProperty ?oldObjProperty ?oldValue
 WHERE {
   GRAPH ?versionHistoryGraph {
     # parameters
-    VALUES ( ?versionHistoryGraph ?oldVersion ?newVersion ?class ?property ?objProperty ?language) {
+    VALUES ( ?versionHistoryGraph ?oldVersion ?newVersion ?class ?oldProperty ?oldObjProperty ?language) {
       ( {% if versionHistoryGraph is defined and versionHistoryGraph != None %}{{ versionHistoryGraph }} {% else %}undef{% endif %}
         {% if oldVersion is defined and oldVersion != None %}{{ oldVersion }} {% else %}undef{% endif %}
         {% if newVersion is defined and newVersion != None %}{{ newVersion }} {% else %}undef{% endif %}
@@ -69,34 +69,36 @@ WHERE {
   }
    # get all deleted reified structures
   GRAPH ?deletionsGraph {
-    ?instance ?property ?object .
-    ?object ?objProperty [] .
+    ?instance ?oldProperty ?object .
+    ?object ?oldObjProperty [] .
   }
   # ... which were not attached to some (other) instance now
   FILTER NOT EXISTS {
     GRAPH ?insertionsGraph {
-      ?instance ?property ?object .
-      ?object ?objProperty [].
+      ?instance ?oldProperty ?object .
+      ?object ?oldObjProperty [].
     }
   }
     FILTER NOT EXISTS {
     GRAPH ?newVersionGraph {
-      ?newInstance ?property ?newObject .
-      ?newObject ?objProperty ?value .
+      ?newInstance ?oldProperty ?newObject .
+      ?newObject ?oldObjProperty ?oldValue .
     }
   }
   GRAPH ?oldVersionGraph {
     # get instances having that reified structure
     ?instance a ?class .
-    ?instance ?property ?object .
-    ?object ?objProperty ?value .
+    ?instance ?oldProperty ?object .
+    ?object ?oldObjProperty ?oldValue .
+    {% for lang in languages %}
     optional {
-      ?instance skos:prefLabel ?prefLabel .
-
-      #restrict prefLabel to a certain language
-      FILTER (lang(?prefLabel) = "en")
-
+      ?instance skos:prefLabel ?prefLabel{{lang|title}} .
+      FILTER (lang(?prefLabel{{lang|title}}) = "{{ lang }}")
     }
+    {% endfor %}
+    BIND(COALESCE({% for lang in languages -%}
+                   ?prefLabel{{lang|title}}{{ ", " if not loop.last else "" }}
+                   {%- endfor -%}) as ?prefLabel)
   }
 }
-ORDER BY ?instance ?value
+ORDER BY ?instance
