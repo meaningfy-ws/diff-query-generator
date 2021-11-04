@@ -97,6 +97,38 @@ Before we introduce the quantification assumptions, we need to mention that the 
 *note*: make sure that each operations is performed on an independent set of triples. That is, for example, a value update shall not be conflated with a movement, or a value addition shall not be conflated with an update. 
 
 
+# Naming conventions
+## Operations
+Looking at patterns of change likely to occur in the context of maintaining SKOS vocabularies or to find in a diffing context
+we've identified 5 change types and mapped them for easy referencing as follows:
+* Addition --> Added  
+* Deletion --> Deleted
+* Value update --> Updated
+* Movement (cross property) --> Changed
+* Movement (cross instance) --> Moved
+## Query file name
+In order to name a query file that will represent what is the query for ,but in the same time to be easy to read,
+the file name will be constructed from five parts. These are operation, rdf type, class name, property name and object property name.
+All names are only the local segment of the Qname (compressed URI) provided and the rdf types are instance, property and reified (reified property).
+
+File name examples: 
+
+Structure --> operation_rdfType_className    
+File name: added_instance_collection
+
+Structure --> operation_rdfType_className_propertyName   
+File name: changed_property_concept_broader
+
+## Query identifiers
+A SPARQL query file could sometimes be long and hard to read. To improve readability and minimize use of hidden variables, the query parameters should express in some manner
+what is the query used for and also to have the same values in the entire query. For easy referencing a change from the SPARQL query parameters , a good option 
+is to add a prefix to the parameters that will have the value changed in the diffing context.
+To avoid pollutions of parameter names the convention will add prefix in front of the parameter that is changing in the diffing context by using the query. 
+This can only be old or new (i.e ?oldInstance ?newInstance).
+*note*: a value change can also be non-existing and existing
+
+
+
 # Contributing
 You are more than welcome to help expand and mature this project. We adhere to [Apache code of conduct](https://www.apache.org/foundation/policies/conduct), please follow it in all your interactions on the project.   
 
