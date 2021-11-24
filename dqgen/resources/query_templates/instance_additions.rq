@@ -34,7 +34,7 @@ PREFIX sd: <http://www.w3.org/ns/sparql-service-description#>
 PREFIX sh: <http://purl.org/skos-history/>
 PREFIX xhv: <http://www.w3.org/1999/xhtml/vocab#>
 # identify added instances
-SELECT distinct ?class (?instance AS ?addedInstance) (?prefLabel AS ?addedInstanceLabel)
+SELECT distinct ?class ?instance ?prefLabel
 WHERE {
   GRAPH ?versionHistoryGraph {
     # parameters
@@ -43,7 +43,6 @@ WHERE {
           {% if oldVersion is defined and oldVersion != None %}{{ oldVersion }} {% else %}undef{% endif %} 
           {% if newVersion is defined and newVersion != None %}{{ newVersion }} {% else %}undef{% endif %}  
           {% if cls is defined and cls != None %}{{ cls }} {% else %}undef{% endif %}
-          {% if lang is defined and lang != None %}"{{ lang }}"{% else %}undef{% endif %}
         )
     }
     # get the current and the previous version as default versions
@@ -68,13 +67,15 @@ WHERE {
   # for each inserted instance a class statement should exist ...
   GRAPH ?insertionsGraph {
     ?instance a ?class .
+    {% for lang in languages %}
     optional {
-      ?instance skos:prefLabel ?prefLabel .
-      {% if lang is defined and lang != None %}
-      # restrict output to a certain language
-      FILTER (lang(?prefLabel) = "{{ lang }}")
-      {% endif %}
+      ?instance skos:prefLabel ?prefLabel{{lang|title}} .
+      FILTER (lang(?prefLabel{{lang|title}}) = "{{ lang }}")
     }
+    {% endfor %}
+    BIND(COALESCE({% for lang in languages -%}
+                   ?prefLabel{{lang|title}}{{ ", " if not loop.last else "" }}
+                   {%- endfor -%}) as ?prefLabel)
   }
   # ... and the instance must not exist in the old version
   FILTER NOT EXISTS {

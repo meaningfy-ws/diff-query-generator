@@ -1,0 +1,60 @@
+class,property,object property,modifiable,language dependent,property group
+skos:ConceptScheme,skosxl:prefLabel,skosxl:literalForm,,1,labels
+skos:ConceptScheme,owl:versionInfo,,,,evolution properties
+skos:ConceptScheme,dct:identifier,,,,identifiers
+skos:ConceptScheme,euvoc:domain,,,,identifiers
+skos:ConceptScheme,dct:isPartOf,,,,semantic properties
+skos:ConceptScheme,dct:created,,,,evolution properties
+skos:ConceptScheme,dct:modified,,,,evolution properties
+skos:ConceptScheme,rdfs:comment,,,1,notes
+skos:ConceptScheme,dct:title,,,1,labels
+skos:Concept,skos:inScheme,,,,semantic properties
+skos:Concept,skos:topConceptOf,,,,semantic properties
+skos:Concept,skos:notation,rdf:value,,,identifiers
+skos:Concept,skos:note,rdf:value,,1,notes
+skos:Concept,skos:changeNote,rdf:value,,1,notes
+skos:Concept,skos:definition,rdf:value,,1,notes
+skos:Concept,skos:example,rdf:value,,1,notes
+skos:Concept,skos:historyNote,rdf:value,,1,notes
+skos:Concept,skos:scopeNote,rdf:value,,1,notes
+skos:Concept,skos:editorialNote,rdf:value,,1,notes
+skos:Concept,owl:versionInfo,,,,evolution properties
+skos:Concept,dct:created,,,,evolution properties
+skos:Concept,owl:deprecated,,,,evolution properties
+skos:Concept,euvoc:startDate,,,,evolution properties
+skos:Concept,euvoc:endDate,,,,evolution properties
+skos:Concept,dct:isReplacedBy,,,,evolution properties
+skos:Concept,skosxl:prefLabel,,,1,labels
+skos:Concept,skosxl:altLabel,,,1,labels
+skos:Concept,skosxl:hiddenLabel,,,1,labels
+skos:Concept,skos:broader,,,,semantic properties
+skos:Concept,skos:narrower,,,,semantic properties
+skos:Concept,skos:related,,,,semantic properties
+skos:Concept,skos:broadMatch,,,,mapping properties
+skos:Concept,skos:narrowMatch,,,,mapping properties
+skos:Concept,skos:closeMatch,,,,mapping properties
+skos:Concept,skos:exactMatch,,,,mapping properties
+skos:Concept,skos:relatedMatch,,,,mapping properties
+skos:Concept,dct:modified,,,,evolution properties
+skos:Concept,lemon:context,,,,miscellaneous
+skosxl:Label,skosxl:literalForm,,,1,miscellaneous
+skosxl:Label,owl:deprecated,,,,evolution properties
+skosxl:Label,dct:type,,,,miscellaneous
+skosxl:Label,owl:versionInfo,,,,evolution properties
+skosxl:Label,dct:created,,,,evolution properties
+skosxl:Label,dct:modified,,,,evolution properties
+skosxl:Label,euvoc:startDate,,,,evolution properties
+skosxl:Label,euvoc:endDate,,,,evolution properties
+euvoc:XlNote,rdf:value,,,1,miscellaneous
+euvoc:XlNote,dct:created,,,,evolution properties
+euvoc:XlNote,dct:modified,,,,evolution properties
+euvoc:XlNote,owl:deprecated,,,,evolution properties
+euvoc:XlNote,dct:source,,,,miscellaneous
+euvoc:XlNote,dct:creator,,,,miscellaneous
+euvoc:XlNotation,rdf:value,,,1,miscellaneous
+euvoc:XlNotation,owl:deprecated,,,,evolution properties
+euvoc:XlNotation,dct:created,,,,evolution properties
+euvoc:XlNotation,dct:modified,,,,evolution properties
+euvoc:XlNotation,dct:type,,,,miscellaneous
+euvoc:XlNotation,euvoc:startDate,,,,evolution properties
+euvoc:XlNotation,euvoc:endDate,,,,evolution properties

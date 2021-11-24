@@ -1,6 +1,7 @@
 from jinja2 import Template
 
 from dqgen.adapters import template_builder
+from dqgen.services import QUERY_FALLBACK_LANGUAGES
 from dqgen.services.base_generator import BaseGenerator
 
 
@@ -8,10 +9,10 @@ class HtmlGenerator(BaseGenerator):
 
     def __init__(self, cls: str, operation: str, output_folder_path: str, template: Template, prop: str = None,
                  object_property: str = None, new_version_graph: str = None, old_version_graph: str = None,
-                 version_history_graph: str = None, language: str = "en", class_name: str = "", prop_name: str = "",
+                 version_history_graph: str = None, languages: list = QUERY_FALLBACK_LANGUAGES, class_name: str = "", prop_name: str = "",
                  obj_prop_name: str = ""):
         super().__init__(cls, operation, output_folder_path, template, prop, object_property, new_version_graph,
-                         old_version_graph, version_history_graph, language)
+                         old_version_graph, version_history_graph, languages)
         self.file_extension = "html"
         self.class_name = class_name
         self.prop_name = prop_name

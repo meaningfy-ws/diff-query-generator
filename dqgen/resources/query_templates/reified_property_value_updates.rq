@@ -35,7 +35,7 @@ PREFIX sh: <http://purl.org/skos-history/>
 PREFIX xhv: <http://www.w3.org/1999/xhtml/vocab#>
 
 # Show reified structures updated values
-SELECT DISTINCT ?instance (?prefLabel as ?instanceLabel) ?property ?objProperty (?value AS ?oldValue) ?newValue
+SELECT DISTINCT ?instance ?prefLabel ?property ?objProperty ?oldValue ?newValue
 WHERE {
   GRAPH ?versionHistoryGraph {
     # parameters
@@ -73,20 +73,24 @@ WHERE {
     ?instance a ?class .
     ?instance ?property ?object .
     ?object ?objProperty ?newValue .
+    {% for lang in languages %}
     optional {
-      ?instance skos:prefLabel ?prefLabel .
-      #restrict prefLabel to a certain language
-      FILTER (lang(?prefLabel) = "en")
+      ?instance skos:prefLabel ?prefLabel{{lang|title}} .
+      FILTER (lang(?prefLabel{{lang|title}}) = "{{ lang }}")
     }
+    {% endfor %}
+    BIND(COALESCE({% for lang in languages -%}
+                   ?prefLabel{{lang|title}}{{ ", " if not loop.last else "" }}
+                   {%- endfor -%}) as ?prefLabel)
   }
   # ... which were attached to some (other) instance before and had another value
   GRAPH ?oldVersionGraph {
         ?instance ?property ?object .
-        ?object ?objProperty ?value .
+        ?object ?objProperty ?oldValue .
   }
   # the old value shall be deleted
   GRAPH ?deletionsGraph {
-        ?object ?objProperty ?value .
+        ?object ?objProperty ?oldValue .
     }
   # the new value shall be inserted
   GRAPH ?insertionsGraph {
@@ -95,6 +99,6 @@ WHERE {
    }
   # the language tag shall be the same
 
-  FILTER( lang(?newValue) = lang(?value) && ?newValue != ?value )
+  FILTER( lang(?newValue) = lang(?oldValue) && ?newValue != ?oldValue )
 }
-ORDER BY ?instance ?newValue
+ORDER BY ?instance

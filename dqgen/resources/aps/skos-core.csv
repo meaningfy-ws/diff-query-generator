@@ -1,0 +1,24 @@
+class,property,object property,modifiable,language dependent,property group
+skos:ConceptScheme,skos:prefLabel,,,1,labels
+skos:ConceptScheme,skos:hasTopConcept,,,,semantic properties
+skos:ConceptScheme,skos:altLabel,,,1,labels
+skos:Concept,skos:inScheme,,,,semantic properties
+skos:Concept,skos:topConceptOf,,,,semantic properties
+skos:Concept,skos:notation,,,1,notes
+skos:Concept,skos:prefLabel,,,1,labels
+skos:Concept,skos:altLabel,,,1,labels
+skos:Concept,skos:hiddenLabel,,,1,labels
+skos:Concept,skos:changeNote,,,1,notes
+skos:Concept,skos:definition,,,1,notes
+skos:Concept,skos:example,,,1,notes
+skos:Concept,skos:historyNote,,,1,notes
+skos:Concept,skos:scopeNote,,,1,notes
+skos:Concept,skos:editorialNote,,,1,notes
+skos:Concept,skos:broader,,,,semantic properties
+skos:Concept,skos:narrower,,,,semantic properties
+skos:Concept,skos:related,,,,semantic properties
+skos:Concept,skos:broadMatch,,,,mapping properties
+skos:Concept,skos:narrowMatch,,,,mapping properties
+skos:Concept,skos:closeMatch,,,,mapping properties
+skos:Concept,skos:exactMatch,,,,mapping properties
+skos:Concept,skos:relatedMatch,,,,mapping properties

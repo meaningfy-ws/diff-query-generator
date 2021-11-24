@@ -25,18 +25,17 @@ PREFIX xhv: <http://www.w3.org/1999/xhtml/vocab#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
 # Show all movements cross instances
-SELECT DISTINCT (?oldInstance AS ?initialInstance) ?initialPrefLabel (?instance AS ?currentInstance) (?prefLabel as ?currentInstanceLabel) ?property ?value
+SELECT DISTINCT ?oldInstance ?oldInstancePrefLabel ?newInstance ?newInstancePrefLabel ?property ?value
 WHERE {
           GRAPH ?versionHistoryGraph {
     # parameters
-    VALUES ( ?versionHistoryGraph ?oldVersion ?newVersion ?class ?property ?language)
+    VALUES ( ?versionHistoryGraph ?oldVersion ?newVersion ?class ?property)
      {
     ({% if versionHistoryGraph is defined and versionHistoryGraph != None %}{{ versionHistoryGraph }} {% else %}undef{% endif %}
     {% if oldVersion is defined and oldVersion != None %}{{ oldVersion }} {% else %}undef{% endif %}
     {% if newVersion is defined and newVersion != None %}{{ newVersion }} {% else %}undef{% endif %}
     {% if cls is defined and cls != None %}{{ cls }} {% else %}undef{% endif %}
-    {% if prop is defined and prop != None %}{{ prop }} {% else %}undef{% endif %}
-    {% if lang is defined and lang != None %}"{{ lang }}"{% else %}undef{% endif %})
+    {% if prop is defined and prop != None %}{{ prop }} {% else %}undef{% endif %})
     }
 # get the current and the previous version as default versions
     ?versionset dsv:currentVersionRecord/xhv:prev/dc:identifier ?previousVersion .
@@ -60,30 +59,40 @@ WHERE {
     # get new instance with the property and value
     GRAPH ?newVersionGraph {
 
-    ?instance a ?class .
-    ?instance ?property ?value .
-    optional{
-    ?instance skos:prefLabel ?prefLabel .
-    FILTER (lang(?prefLabel) = "en")
+    ?newInstance a ?class .
+    ?newInstance ?property ?value .
+    {% for lang in languages %}
+    optional {
+      ?newInstance skos:prefLabel ?prefLabel{{lang|title}} .
+      FILTER (lang(?prefLabel{{lang|title}}) = "{{ lang }}")
     }
+    {% endfor %}
+    BIND(COALESCE({% for lang in languages -%}
+                   ?prefLabel{{lang|title}}{{ ", " if not loop.last else "" }}
+                   {%- endfor -%}) as ?newInstancePrefLabel)
     }
     # get all instances from the old version with the same property and value
     GRAPH ?oldVersionGraph {
     ?oldInstance a ?class .
     ?oldInstance ?property ?value .
-    optional{
-    ?oldInstance skos:prefLabel ?initialPrefLabel .
-    FILTER (lang(?initialPrefLabel) = "en")
+    {% for lang in languages %}
+    optional {
+      ?oldInstance skos:prefLabel ?oldPrefLabel{{lang|title}} .
+      FILTER (lang(?oldPrefLabel{{lang|title}}) = "{{ lang }}")
     }
+    {% endfor %}
+    BIND(COALESCE({% for lang in languages -%}
+                   ?oldPrefLabel{{lang|title}}{{ ", " if not loop.last else "" }}
+                   {%- endfor -%}) as ?oldInstancePrefLabel)
     }
     # the new instance shall be inserted
     GRAPH ?insertionsGraph {
-    ?instance ?property ?value .
+    ?newInstance ?property ?value .
     }
     # the old instance shall be inserted
     GRAPH ?deletionsGraph {
     ?oldInstance ?property ?value .
     }
-    FILTER( ?oldInstance != ?instance)
+    FILTER( ?oldInstance != ?newInstance)
     }
-ORDER BY ?instance
+ORDER BY ?newInstance

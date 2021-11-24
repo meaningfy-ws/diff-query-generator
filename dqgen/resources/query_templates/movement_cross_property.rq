@@ -25,18 +25,18 @@ PREFIX xhv: <http://www.w3.org/1999/xhtml/vocab#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
 # Show all movements cross property
-SELECT DISTINCT ?instance ?prefLabel (?property as ?oldProperty) ?newProperty ?value
+SELECT DISTINCT ?instance ?prefLabel ?oldProperty ?newProperty ?value
 WHERE {
           GRAPH ?versionHistoryGraph {
     # parameters
-    VALUES ( ?versionHistoryGraph ?oldVersion ?newVersion ?class ?property ?language)
+    VALUES ( ?versionHistoryGraph ?oldVersion ?newVersion ?class ?oldProperty)
      {
     ({% if versionHistoryGraph is defined and versionHistoryGraph != None %}{{ versionHistoryGraph }} {% else %}undef{% endif %}
     {% if oldVersion is defined and oldVersion != None %}{{ oldVersion }} {% else %}undef{% endif %}
     {% if newVersion is defined and newVersion != None %}{{ newVersion }} {% else %}undef{% endif %}
     {% if cls is defined and cls != None %}{{ cls }} {% else %}undef{% endif %}
     {% if prop is defined and prop != None %}{{ prop }} {% else %}undef{% endif %}
-    {% if lang is defined and lang != None %}"{{ lang }}"{% else %}undef{% endif %})
+    )
     }
 # get the current and the previous version as default versions
     ?versionset dsv:currentVersionRecord/xhv:prev/dc:identifier ?previousVersion .
@@ -62,15 +62,20 @@ WHERE {
 
     ?instance a ?class .
     ?instance ?newProperty ?value .
-    optional{
-    ?instance skos:prefLabel ?prefLabel .
-    FILTER (lang(?prefLabel) = "en")
+    {% for lang in languages %}
+    optional {
+      ?instance skos:prefLabel ?prefLabel{{lang|title}} .
+      FILTER (lang(?prefLabel{{lang|title}}) = "{{ lang }}")
     }
+    {% endfor %}
+    BIND(COALESCE({% for lang in languages -%}
+                   ?prefLabel{{lang|title}}{{ ", " if not loop.last else "" }}
+                   {%- endfor -%}) as ?prefLabel)
     }
     # the instance from the old version should have another property and but same value
     GRAPH ?oldVersionGraph {
     ?instance a ?class .
-    ?instance ?property ?value .
+    ?instance ?oldProperty ?value .
     }
     # new property and value should be inserted
     GRAPH ?insertionsGraph {
@@ -78,8 +83,8 @@ WHERE {
     }
     # the old property with value shall be deleted
     GRAPH ?deletionsGraph {
-    ?instance ?property ?value .
+    ?instance ?oldProperty ?value .
     }
-    FILTER( ?newProperty != ?property)
+    FILTER( ?newProperty != ?oldProperty)
     }
 ORDER BY ?instance
