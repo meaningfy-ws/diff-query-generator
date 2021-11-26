@@ -38,7 +38,7 @@ SELECT distinct ?class ?instance ?prefLabel
 WHERE {
   GRAPH ?versionHistoryGraph {
     # parameters
-    VALUES ( ?versionHistoryGraph ?oldVersion ?newVersion ?class ?language ) {
+    VALUES ( ?versionHistoryGraph ?oldVersion ?newVersion ?class) {
         ( {% if versionHistoryGraph is defined and versionHistoryGraph != None %}{{ versionHistoryGraph }} {% else %}undef{% endif %} 
           {% if oldVersion is defined and oldVersion != None %}{{ oldVersion }} {% else %}undef{% endif %} 
           {% if newVersion is defined and newVersion != None %}{{ newVersion }} {% else %}undef{% endif %}  
@@ -73,9 +73,13 @@ WHERE {
       FILTER (lang(?prefLabel{{lang|title}}) = "{{ lang }}")
     }
     {% endfor %}
+    {% if languages|length > 1 %}
     BIND(COALESCE({% for lang in languages -%}
                    ?prefLabel{{lang|title}}{{ ", " if not loop.last else "" }}
                    {%- endfor -%}) as ?prefLabel)
+    {% else %}
+    BIND (?prefLabel{{languages[0]|title}} AS ?prefLabel)
+    {% endif %}
   }
   # ... and the instance must not exist in the old version
   FILTER NOT EXISTS {

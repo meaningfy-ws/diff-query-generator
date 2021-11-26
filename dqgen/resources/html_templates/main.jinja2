@@ -1,6 +1,7 @@
 {% raw %}
 {% extends "layout.html" %}
 {% import "macros.html" as mc %}
+{% block content %}
 {% endraw %}
     <p>This report is automatically generated from the RDF data and aims at presenting the difference between
         two versions of an authority table maintained in VocBench3 following VB3-SRC-AP application profile.</p>
@@ -25,3 +26,6 @@
         {% endfor %}
     {% endfor %}
 {% endfor %}
+{% raw %}
+{% endblock %}
+{% endraw %}
