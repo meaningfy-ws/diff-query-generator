@@ -35,18 +35,17 @@ PREFIX sh: <http://purl.org/skos-history/>
 PREFIX xhv: <http://www.w3.org/1999/xhtml/vocab#>
 
 # Show all movements cross instance for reified structures
-SELECT (count(*) as ?entries)
+SELECT (count(distinct *) as ?entries)
 WHERE {
   GRAPH ?versionHistoryGraph {
     # parameters
-    VALUES ( ?versionHistoryGraph ?oldVersion ?newVersion ?class ?property ?objProperty ?language) {
+    VALUES ( ?versionHistoryGraph ?oldVersion ?newVersion ?class ?property ?objProperty) {
       ( {% if versionHistoryGraph is defined and versionHistoryGraph != None %}{{ versionHistoryGraph }} {% else %}undef{% endif %}
         {% if oldVersion is defined and oldVersion != None %}{{ oldVersion }}{% else %}undef{% endif %}
         {% if newVersion is defined and newVersion != None %}{{ newVersion }}{% else %}undef{% endif %}
         {% if cls is defined and cls != None %}{{ cls }}{% else %}undef{% endif %}
         {% if prop is defined and prop != None %}{{ prop }}{% else %}undef{% endif %}
         {% if obj_prop is defined and obj_prop != None %}{{ obj_prop }}{% else %}undef{% endif %}
-        {% if lang is defined and lang != None %}"{{ lang }}"{% else %}undef{% endif %}
       )
     }
     # get the current and the previous version as default versions
@@ -74,20 +73,38 @@ WHERE {
     ?newInstance a ?class .
     ?newInstance ?property ?object .
     ?object ?objProperty ?value .
-    optional{
-    ?newInstance skos:prefLabel ?newPrefLabel .
-    FILTER (lang(?newPrefLabel) = "en")
+    {% for lang in languages %}
+    optional {
+      ?newInstance skos:prefLabel ?prefLabel{{lang|title}} .
+      FILTER (lang(?prefLabel{{lang|title}}) = "{{ lang }}")
     }
+    {% endfor %}
+    {% if languages|length > 1 %}
+    BIND(COALESCE({% for lang in languages -%}
+                   ?prefLabel{{lang|title}}{{ ", " if not loop.last else "" }}
+                   {%- endfor -%}) as ?newInstancePrefLabel)
+    {% else %}
+    BIND (?prefLabel{{languages[0]|title}} AS ?newInstancePrefLabel)
+    {% endif %}
     }
     # get instances from the old version with the same property and value
     GRAPH ?oldVersionGraph {
     ?oldInstance a ?class .
     ?oldInstance ?property ?oldObject .
     ?oldObject ?objProperty ?value .
-    optional{
-    ?oldInstance skos:prefLabel ?oldPrefLabel .
-    FILTER (lang(?oldPrefLabel) = "en")
+    {% for lang in languages %}
+    optional {
+      ?oldInstance skos:prefLabel ?oldPrefLabel{{lang|title}} .
+      FILTER (lang(?oldPrefLabel{{lang|title}}) = "{{ lang }}")
     }
+    {% endfor %}
+    {% if languages|length > 1 %}
+    BIND(COALESCE({% for lang in languages -%}
+                   ?oldPrefLabel{{lang|title}}{{ ", " if not loop.last else "" }}
+                   {%- endfor -%}) as ?oldInstancePrefLabel)
+    {% else %}
+    BIND (?oldPrefLabel{{languages[0]|title}} AS ?oldInstancePrefLabel)
+    {% endif %}
     }
     # the new instance shall be inserted
     GRAPH ?insertionsGraph {
@@ -101,3 +118,4 @@ WHERE {
     }
     FILTER( ?newInstance != ?oldInstance)
     }
+ORDER BY ?newInstance
