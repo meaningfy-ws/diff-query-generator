@@ -1,12 +1,15 @@
 {% raw %}
 {% extends "layout.html" %}
 {% import "macros.html" as mc %}
+{% block content %}
 {% endraw %}
-    <p>This report is automatically generated from the RDF data and aims at presenting the difference between
-        two versions of an authority table maintained in VocBench3 following VB3-SRC-AP application profile.</p>
-    <p>The report is primarily focused on the concept instances (skos:Concept), and does not cover other classes as they
-        may occur (e.g. skos:ConceptScheme, skosxl:Label, euvoc:XlNote etc.).</p>
-    <p>This is a beta version of the report and is subject to changes.</p>
+    <p>This report is automatically generated from the {% raw %}{{ conf.dataset_name }}{% endraw %} RDF dataset on <time>{% raw %}{{ conf.timestamp }}{% endraw %}</time>
+        and aims at presenting the difference between two versions of an authority table following {% raw %}{{ conf.application_profile }}{% endraw %} application profile.</p>
+    <p>Report details</p>
+    <p><strong>Dataset used: </strong> {% raw %}{{ conf.dataset_name }}{% endraw %}</p>
+    <p><strong>Time: </strong> {% raw %}{{ conf.timestamp }}{% endraw %}</p>
+    <p><strong>Application profile: </strong> {% raw %}{{ conf.application_profile }}{% endraw %}</p>
+    <p><strong>Graph URI: </strong> {% raw %}{{ conf.graph_uri }}{% endraw %}</p>
 {% raw %}
 {% include "statistics.html" %}
 {% endraw %}
@@ -25,3 +28,6 @@
         {% endfor %}
     {% endfor %}
 {% endfor %}
+{% raw %}
+{% endblock %}
+{% endraw %}

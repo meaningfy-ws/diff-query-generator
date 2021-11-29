@@ -6,7 +6,9 @@ from dqgen.services.base_generator import BaseGenerator
 
 
 class HtmlGenerator(BaseGenerator):
-
+    """
+    This class will generate a html template file from a html meta-template
+    """
     def __init__(self, cls: str, operation: str, output_folder_path: str, template: Template, prop: str = None,
                  object_property: str = None, new_version_graph: str = None, old_version_graph: str = None,
                  version_history_graph: str = None, languages: list = QUERY_FALLBACK_LANGUAGES, class_name: str = "", prop_name: str = "",
@@ -19,6 +21,10 @@ class HtmlGenerator(BaseGenerator):
         self.obj_prop_name = obj_prop_name
 
     def build_template(self):
+        """
+            This method builds a desired html template from the a meta-template
+        :return: html template
+        """
         query_file = self.build_file_name(file_extension='rq')
         operation = self.operation.split("_")[0]
         return template_builder.build_html_template(jinja2_template=self.template, query_file=query_file,

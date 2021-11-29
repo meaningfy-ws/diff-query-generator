@@ -119,7 +119,7 @@ File name: added_instance_collection
 Structure --> operation_rdfType_className_propertyName   
 File name: changed_property_concept_broader
 
-## Query identifiers
+## Query variables
 A SPARQL query file could sometimes be long and hard to read. To improve readability and minimize use of hidden variables, the query parameters should express in some manner
 what is the query used for and also to have the same values in the entire query. For easy referencing a change from the SPARQL query parameters , a good option 
 is to add a prefix to the parameters that will have the value changed in the diffing context.

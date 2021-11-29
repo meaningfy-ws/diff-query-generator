@@ -35,11 +35,11 @@ PREFIX sh: <http://purl.org/skos-history/>
 PREFIX xhv: <http://www.w3.org/1999/xhtml/vocab#>
 
 # Show all added instance/property
-SELECT DISTINCT ?instance ?prefLabel ?newProperty ?newValue
+SELECT DISTINCT ?instance ?prefLabel ?property ?value
 WHERE {
   GRAPH ?versionHistoryGraph {
     # parameters
-    VALUES ( ?versionHistoryGraph ?oldVersion ?newVersion ?class ?newProperty) {
+    VALUES ( ?versionHistoryGraph ?oldVersion ?newVersion ?class ?property) {
       ( {% if versionHistoryGraph is defined and versionHistoryGraph != None %}{{ versionHistoryGraph }} {% else %}undef{% endif %}
         {% if oldVersion is defined and oldVersion != None %}{{ oldVersion }} {% else %}undef{% endif %}
         {% if newVersion is defined and newVersion != None %}{{ newVersion }} {% else %}undef{% endif %}
@@ -68,32 +68,36 @@ WHERE {
   }
   # get inserted properties for a instance
   GRAPH ?insertionsGraph {
-    ?instance ?newProperty [] .
+    ?instance ?property [] .
   }
   # ... which were not attached to some (other) instance before
   FILTER NOT EXISTS {
     GRAPH ?deletionsGraph {
-      ?instance ?newProperty [] .
+      ?instance ?property [] .
     }
   }
     FILTER NOT EXISTS {
     GRAPH ?oldVersionGraph {
-      [] ?newProperty ?newValue .
+      [] ?property ?value .
     }
   }
   GRAPH ?newVersionGraph {
     # get instances with those property values
     ?instance a ?class .
-    ?instance ?newProperty ?newValue .
+    ?instance ?property ?value .
     {% for lang in languages %}
     optional {
       ?instance skos:prefLabel ?prefLabel{{lang|title}} .
       FILTER (lang(?prefLabel{{lang|title}}) = "{{ lang }}")
     }
     {% endfor %}
+    {% if languages|length > 1 %}
     BIND(COALESCE({% for lang in languages -%}
                    ?prefLabel{{lang|title}}{{ ", " if not loop.last else "" }}
                    {%- endfor -%}) as ?prefLabel)
+    {% else %}
+    BIND (?prefLabel{{languages[0]|title}} AS ?prefLabel)
+    {% endif %}
   }
 }
 ORDER BY ?instance

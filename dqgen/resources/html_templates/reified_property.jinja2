@@ -1,18 +1,19 @@
 {% raw %}
 {% import "macros.html" as mc %}
 {% endraw %}
-<h2 class="ui header">{{ operation|title }} reified {{ property_name }}</h2>
-<section class="ui basic segment">
-    <p>The table below lists the {{ operation }} <strong>{{ property }} / {{ object_property }}</strong>
-    </p>
-
     {{ "{%" }} set content, error = from_endpoint(conf.default_endpoint).with_query_from_file(conf.query_files["{{ query_file }}"]).fetch_tabular() {{ "%}" }}
     {% raw %}
+{% if not content.empty %}
     {% call mc.render_fetch_results(content, error) %}
     {% endraw %}
-
-    {{ "{{" }} mc.pandas_table(content, "{{ operation|title }} reified {{ property_name }}") {{ "}}" }}
+    <h3 class="ui header">{{ operation|title }} reified {{ property_name }}</h3>
+    <section class="ui basic segment">
+        <p>The table below lists the {{ operation }} <strong>{{ property }} / {{ object_property }}</strong>
+        </p>
+        <p><strong>Query identifier:</strong> {{ query_file }}</p>
+        {{ "{{" }} mc.pandas_table(content, "{{ operation|title }} reified {{ property_name }}") {{ "}}" }}
+    </section>
     {% raw %}
     {% endcall %}
+{% endif %}
     {% endraw %}
-</section>

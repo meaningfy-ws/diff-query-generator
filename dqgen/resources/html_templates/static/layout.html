@@ -113,6 +113,16 @@
                 details: true
             }
         });
+        $("h2").each(function () {
+            if (!$(this).next().is("section") && !$(this).next().is("h3") && !$(this).next().hasClass("dataTables_wrapper")) {
+                $(this).remove();
+            }
+        });
+        $("h1").not(':first').each(function () {
+            if (!$(this).next().is("h2") && !$(this).next().is("section")) {
+                $(this).remove();
+            }
+        });
 
         $(function () {
             $("#toc").tocify({

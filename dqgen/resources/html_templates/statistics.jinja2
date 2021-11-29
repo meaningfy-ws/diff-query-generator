@@ -12,12 +12,14 @@
         <table class="display">
             <thead class="center aligned">
             <tr>
+                <th>Instance</th>
                 <th>Added</th>
                 <th>Deleted</th>
             </tr>
             </thead>
             <tbody>
             <tr>
+                <td>{{ class_data.label }}</td>
                 {% for count_query in class_data.instance_changes.count_queries %}
                     {{ "{%" }} set content, error = from_endpoint(conf.default_endpoint).with_query_from_file(conf.query_files["{{ count_query }}"]).fetch_tabular() {{ "%}" }}
                     {% raw %}
@@ -30,13 +32,42 @@
             </tr>
             </tbody>
         </table>
-        {% for prop_group, prop_group_data in class_data.prop_groups.items() %}
-            <h3>{{ prop_group_data.label }}</h3>
-            {% for index ,count_prop_section in prop_group_data.count_queries.items() %}
-                {% include "statistics_prop_section.jinja2" with context %}
-            {% endfor %}
-        {% endfor %}
 
+        <table class="display">
+            <thead class="center aligned">
+            <tr>
+                <th>Property group</th>
+                <th>Property</th>
+                <th>Added</th>
+                <th>Deleted</th>
+                <th>Updated</th>
+                <th>Moved</th>
+                <th>Changed</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for prop_group, prop_group_data in class_data.prop_groups.items() %}
+                {% set prop_group_name =  prop_group_data.label %}
+                {% for index ,count_prop_section in prop_group_data.count_queries.items() %}
+
+                    <tr>
+                        <td>{{ prop_group_name }}</td>
+                        <td>{{ count_prop_section.label }}</td>
+                        {% for query_file in  count_prop_section.files %}
+                            {{ "{%" }} set content, error = from_endpoint(conf.default_endpoint).with_query_from_file(conf.query_files["{{ query_file }}"]).fetch_tabular() {{ "%}" }}
+                            {% raw %}
+                            {% call mc.render_fetch_results(content, error) %}
+
+                            {{ mc.count_value(content) }}
+                            {% endcall %}
+                            {% endraw %}
+                        {% endfor %}
+                    </tr>
+
+                {% endfor %}
+            {% endfor %}
+            </tbody>
+        </table>
 
     {% endfor %}
 </section>

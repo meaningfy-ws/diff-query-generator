@@ -59,3 +59,14 @@
         {{ render_error("How did you get here? did you forget to use 'render_fetch_results' macro?") }}
     {% endif %}
 {%- endmacro %}
+
+{% macro count_value(df) %}
+    {% for idx, row in df.iterrows() %}
+
+        {% for colname in df.columns %}
+            <td>{{ row[colname] }}</td>
+
+        {% endfor %}
+
+    {% endfor %}
+{% endmacro %}
