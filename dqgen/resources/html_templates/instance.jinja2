@@ -5,6 +5,7 @@
     {% raw %}
 {% if not content.empty %}
    {% call mc.render_fetch_results(content, error) %}
+    {% set compress_uris = simplify_uri_columns_in_tabular(data_frame=content,namespace_inventory=namespaces,error_fail=False) %}
     {% endraw %}
     <h2 class="ui header">{{ operation|title }} {{ class_name }}s</h2>
     <section class="ui basic segment">

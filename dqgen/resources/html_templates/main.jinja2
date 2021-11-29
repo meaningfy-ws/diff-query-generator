@@ -11,6 +11,7 @@
     <p><strong>Application profile: </strong> {% raw %}{{ conf.application_profile }}{% endraw %}</p>
     <p><strong>Graph URI: </strong> {% raw %}{{ conf.graph_uri }}{% endraw %}</p>
 {% raw %}
+{% set namespaces = namespace_inventory({}) %}
 {% include "statistics.html" %}
 {% endraw %}
 {% for class_key , class_data in data_source.items() %}
