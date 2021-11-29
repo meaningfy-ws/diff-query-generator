@@ -35,7 +35,8 @@ PREFIX sh: <http://purl.org/skos-history/>
 PREFIX xhv: <http://www.w3.org/1999/xhtml/vocab#>
 
 # Show all movements cross instance for reified structures
-SELECT DISTINCT ?oldInstance ?oldInstancePrefLabel ?newInstance ?newInstancePrefLabel ?property ?objProperty ?value
+SELECT DISTINCT ?oldInstance ?oldInstancePrefLabel ?oldInstancePrefLabelLang ?newInstance ?newInstancePrefLabel
+  ?newInstancePrefLabelLang ?property ?objProperty ?value ?valueLang
 WHERE {
   GRAPH ?versionHistoryGraph {
     # parameters
@@ -86,6 +87,8 @@ WHERE {
     {% else %}
     BIND (?prefLabel{{languages[0]|title}} AS ?newInstancePrefLabel)
     {% endif %}
+            BIND (lang(?newInstancePrefLabel) AS ?newInstancePrefLabelLang )
+        BIND (lang(?value) AS ?valueLang )
     }
     # get instances from the old version with the same property and value
     GRAPH ?oldVersionGraph {
@@ -105,6 +108,7 @@ WHERE {
     {% else %}
     BIND (?oldPrefLabel{{languages[0]|title}} AS ?oldInstancePrefLabel)
     {% endif %}
+      BIND (lang(?oldInstancePrefLabel) AS ?oldInstancePrefLabelLang )
     }
     # the new instance shall be inserted
     GRAPH ?insertionsGraph {
