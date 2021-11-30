@@ -96,9 +96,9 @@ Before we introduce the quantification assumptions, we need to mention that the 
 
 *note*: make sure that each operations is performed on an independent set of triples. That is, for example, a value update shall not be conflated with a movement, or a value addition shall not be conflated with an update. 
 
-
-# Naming conventions
-## Operations
+#SPARQL queries
+## Naming conventions
+### Operations
 Looking at patterns of change likely to occur in the context of maintaining SKOS vocabularies or to find in a diffing context
 we've identified 5 change types and mapped them for easy referencing as follows:
 * Addition --> Added  
@@ -106,7 +106,7 @@ we've identified 5 change types and mapped them for easy referencing as follows:
 * Value update --> Updated
 * Movement (cross property) --> Changed
 * Movement (cross instance) --> Moved
-## Query file name
+### Query file name
 In order to name a query file that will represent what is the query for ,but in the same time to be easy to read,
 the file name will be constructed from five parts. These are operation, rdf type, class name, property name and object property name.
 All names are only the local segment of the Qname (compressed URI) provided and the rdf types are instance, property and reified (reified property).
@@ -119,14 +119,189 @@ File name: added_instance_collection
 Structure --> operation_rdfType_className_propertyName   
 File name: changed_property_concept_broader
 
-## Query variables
+##Structure
+In this project the SPARQL query is constructed from four parts that will be explained below. 
+##Prefixes section
+Prefixes are declared in this section before the select statement of the query. It can have as many as possible prefixes 
+and values as the query will use only the ones that it needs.
+### Query variables
 A SPARQL query file could sometimes be long and hard to read. To improve readability and minimize use of hidden variables, the query parameters should express in some manner
 what is the query used for and also to have the same values in the entire query. For easy referencing a change from the SPARQL query parameters , a good option 
 is to add a prefix to the parameters that will have the value changed in the diffing context.
-To avoid pollutions of parameter names the convention will add prefix in front of the parameter that is changing in the diffing context by using the query. 
+To avoid pollutions of variables names the convention will add prefix in front of the variables that is changing in the diffing context by using the query. 
 This can only be old or new (i.e ?oldInstance ?newInstance).
-*note*: a value change can also be non-existing and existing
+###Version history graph block
+This block will remain unchanged for all diffing queries as it's defining the graphs that are used later in the query.
+As a mention there is only one part that can change here and that is the value injection for the query which will be 
+present in the next section. The logic of the query is based on this four graphs that are built here. We can see below 
+that we are going to have access to newVersionGraph, oldVersionGraph, insertionsGraph and deletionsGraph, so we can filter
+our data.
 
+      GRAPH ?versionHistoryGraph {
+
+        # parameters
+        VALUES ( ?versionHistoryGraph ?oldVersion ?newVersion ?class) {
+            ( undef 
+              undef 
+              undef  
+              skos:Concept 
+            )
+        }
+        # get the current and the previous version as default versions
+        ?versionset dsv:currentVersionRecord/xhv:prev/dc:identifier ?previousVersion .
+        ?versionset dsv:currentVersionRecord/dc:identifier ?latestVersion .
+        # select the versions to actually use
+        BIND(coalesce(?oldVersion, ?previousVersion) AS ?oldVersionSelected)
+        BIND(coalesce(?newVersion, ?latestVersion) AS ?newVersionSelected)
+        # get the delta and via that the relevant graphs
+        ?delta a sh:SchemeDelta ;
+          sh:deltaFrom/dc:identifier ?oldVersionSelected ;
+          sh:deltaTo/dc:identifier ?newVersionSelected ;
+          sh:deltaFrom/sh:usingNamedGraph/sd:name ?oldVersionGraph ;
+          sh:deltaTo/sh:usingNamedGraph/sd:name ?newVersionGraph .
+        ?insertions a sh:SchemeDeltaInsertions ;
+          dct:isPartOf ?delta ;
+          sh:usingNamedGraph/sd:name ?insertionsGraph .
+        ?deletions a sh:SchemeDeltaDeletions ;
+          dct:isPartOf ?delta ;
+          sh:usingNamedGraph/sd:name ?deletionsGraph .
+      }
+
+###Value injection
+As mentioned in the previous section there is a value injection block where we can assign values to variables that 
+are going to be used in the query logic.
+
+       # parameters
+        VALUES ( ?versionHistoryGraph ?oldVersion ?newVersion ?class) {
+            ( undef 
+              undef 
+              undef  
+              skos:Concept 
+            )
+        }
+
+###Query logic
+This part of the query is filtering the data by looking for triples in the graphs made available in the version history 
+graph block. As an example, will want to look for new instances that are of a certain class and to achieve this will 
+want to look into the insertions graph.
+
+      GRAPH ?insertionsGraph {
+        ?instance a ?class .
+        
+        optional {
+          ?instance skos:prefLabel ?prefLabelEn .
+          FILTER (lang(?prefLabelEn) = "en")
+        }
+
+The query logic can continue to filter the results by verifying existence of triples in other available graphs. This can 
+be done by using another graph block as showed below.
+
+      # ... and the instance must not exist in the old version
+      FILTER NOT EXISTS {
+        GRAPH ?oldVersionGraph {
+          ?instance ?p [] .
+        }
+      }
+
+##Examples of diffing queries
+Building a query to get all added skos:altLabel property per instance of a certain class.
+1. Prefixes section
+
+
+    # basic namespaces
+    PREFIX owl: <http://www.w3.org/2002/07/owl#>
+    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+    .
+    .
+    .
+    # versioning namespaces
+    PREFIX dsv: <http://purl.org/iso25964/DataSet/Versioning#>
+    PREFIX sd: <http://www.w3.org/ns/sparql-service-description#>
+    PREFIX sh: <http://purl.org/skos-history/>
+    PREFIX xhv: <http://www.w3.org/1999/xhtml/vocab#>
+
+
+2. Query variables
+For the results and the query itself to be easy to read we need to choose good variable names and make sure the variables
+will bring the expected result format. In this case we want to see instance URI, instance label, property and 
+value of the property.
+
+
+      SELECT DISTINCT ?instance ?prefLabel ?property ?value 
+      WHERE {
+
+4. Version history graph block and value injection
+
+    
+     GRAPH ?versionHistoryGraph {
+        # defining values for our variables that are we going to use in the query (instance class and property)
+        VALUES ( ?versionHistoryGraph ?oldVersion ?newVersion ?class ?property) {
+          ( undef
+            undef
+            undef
+            skos:Concept 
+            skos:altLabel 
+          )
+        }
+        # get the current and the previous version as default versions
+        ?versionset dsv:currentVersionRecord/xhv:prev/dc:identifier ?previousVersion .
+        ?versionset dsv:currentVersionRecord/dc:identifier ?latestVersion .
+        # select the versions to actually use
+        BIND(coalesce(?oldVersion, ?previousVersion) AS ?oldVersionSelected)
+        BIND(coalesce(?newVersion, ?latestVersion) AS ?newVersionSelected)
+        # get the delta and via that the relevant graphs
+        ?delta a sh:SchemeDelta ;
+          sh:deltaFrom/dc:identifier ?oldVersionSelected ;
+          sh:deltaTo/dc:identifier ?newVersionSelected ;
+          sh:deltaFrom/sh:usingNamedGraph/sd:name ?oldVersionGraph ;
+          sh:deltaTo/sh:usingNamedGraph/sd:name ?newVersionGraph ;
+          dct:hasPart ?insertions ;
+          dct:hasPart ?deletions .
+        ?deletions a sh:SchemeDeltaDeletions ;
+          sh:usingNamedGraph/sd:name ?deletionsGraph .
+        ?insertions a sh:SchemeDeltaInsertions ;
+          sh:usingNamedGraph/sd:name ?insertionsGraph .
+      }
+
+
+5. Query logic
+In this part we need to filter the results to get only the instances that had the skos:altLabel property added. As
+a starting point we will look in the insertions graph to get all inserted skos:altLabel properties for all instances. 
+For this to be a true addition and not a change or a movement operation we need to make sure that the property was
+not attached to some other instance before and to do this will look into the deletions graph and old version graph. 
+After filtering the result we can get all the values that are needed from the new version graph.
+
+
+
+      # get inserted properties for instances
+      GRAPH ?insertionsGraph {
+        ?instance ?property [] .
+      }
+      # ... which were not attached to some (other) instance before
+      FILTER NOT EXISTS {
+        GRAPH ?deletionsGraph {
+          ?instance ?property [] .
+        }
+      }
+        FILTER NOT EXISTS {
+        GRAPH ?oldVersionGraph {
+          [] ?property ?value .
+        }
+      }
+        # get instances with those property values
+      GRAPH ?newVersionGraph {
+
+        ?instance a ?class .
+        ?instance ?property ?value .
+        
+        optional {
+          ?instance skos:prefLabel ?prefLabel .
+          FILTER (lang(?prefLabelEn) = "en")
+        }
+      }
+    }
 
 
 # Contributing
