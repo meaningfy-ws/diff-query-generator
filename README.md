@@ -122,7 +122,7 @@ File name: changed_property_concept_broader
 ##Structure
 In this project the SPARQL query is constructed from four parts that will be explained below. 
 ##Prefixes section
-Prefixes are declared in this section before the select statement of the query. It can have as many as possible prefixes 
+Prefixes are declared in this section before the select statement of the query. It can have as many possible prefixes 
 and values as the query will use only the ones that it needs.
 ### Query variables
 A SPARQL query file could sometimes be long and hard to read. To improve readability and minimize use of hidden variables, the query parameters should express in some manner
@@ -182,7 +182,13 @@ are going to be used in the query logic.
 
 ###Query logic
 This part of the query is filtering the data by looking for triples in the graphs made available in the version history 
-graph block. As an example, will want to look for new instances that are of a certain class and to achieve this will 
+graph block. The graphs are made available through the delta generated ([see Versions and Deltas as Named Graphs](https://github.com/jneubert/skos-history/wiki/Versions-and-Deltas-as-Named-Graphs)) by the diffing process, and they are as follows:
+- oldVersionGraph - contains triples existing in the old version file
+- newVersionGraph - contains triples existing in the new version file
+- insertionsGraph - contains added triples to the old version file
+- deletionsGraph - contains triples deleted from the old version file
+
+As an example, will want to look for new instances that are of a certain class and to achieve this will 
 want to look into the insertions graph.
 
       GRAPH ?insertionsGraph {
@@ -203,7 +209,7 @@ be done by using another graph block as showed below.
         }
       }
 
-##Examples of diffing queries
+##Example of diffing query
 Building a query to get all added skos:altLabel property per instance of a certain class.
 1. Prefixes section
 
@@ -224,6 +230,7 @@ Building a query to get all added skos:altLabel property per instance of a certa
 
 
 2. Query variables
+
 For the results and the query itself to be easy to read we need to choose good variable names and make sure the variables
 will bring the expected result format. In this case we want to see instance URI, instance label, property and 
 value of the property.
