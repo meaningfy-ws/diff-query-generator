@@ -120,8 +120,8 @@ Structure --> operation_rdfType_className_propertyName
 File name: changed_property_concept_broader
 
 ##Structure
-In this project the SPARQL query is constructed from four parts that will be explained below. 
-##Prefixes section
+In this project the SPARQL query is constructed from five parts that will be explained below. 
+###Prefixes section
 Prefixes are declared in this section before the select statement of the query. It can have as many possible prefixes 
 and values as the query will use only the ones that it needs.
 ### Query variables
