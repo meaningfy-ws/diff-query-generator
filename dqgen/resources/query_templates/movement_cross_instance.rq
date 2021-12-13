@@ -25,7 +25,9 @@ PREFIX xhv: <http://www.w3.org/1999/xhtml/vocab#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
 # Show all movements cross instances
-SELECT DISTINCT ?oldInstance ?oldInstancePrefLabel ?oldInstancePrefLabelLang ?newInstance ?newInstancePrefLabel ?newInstancePrefLabelLang ?property ?value ?valueLang
+SELECT DISTINCT ?oldInstance ?class ?oldInstancePrefLabel ?oldInstancePrefLabelLang ?newInstance
+    ?newInstancePrefLabel
+    ?newInstancePrefLabelLang ?property ?value ?valueLang ("{{type_of_action}}" as ?actionType)
 WHERE {
           GRAPH ?versionHistoryGraph {
     # parameters
@@ -63,7 +65,7 @@ WHERE {
     ?newInstance ?property ?value .
     {% for lang in languages %}
     optional {
-      ?newInstance skos:prefLabel ?prefLabel{{lang|title}} .
+      ?newInstance {{ preview_property }} ?prefLabel{{lang|title}} .
       FILTER (lang(?prefLabel{{lang|title}}) = "{{ lang }}")
     }
     {% endfor %}
@@ -83,7 +85,7 @@ WHERE {
     ?oldInstance ?property ?value .
     {% for lang in languages %}
     optional {
-      ?oldInstance skos:prefLabel ?oldPrefLabel{{lang|title}} .
+      ?oldInstance {{ preview_property }} ?oldPrefLabel{{lang|title}} .
       FILTER (lang(?oldPrefLabel{{lang|title}}) = "{{ lang }}")
     }
     {% endfor %}

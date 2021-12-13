@@ -13,7 +13,7 @@ import pandas as pd
 
 from dqgen.adapters.ap_reader import read_ap_from_csv
 from dqgen.services import CLASSES_OPERATION_TEMPLATE_MAPPING, PROPERTIES_OPERATION_TEMPLATE_MAPPING, \
-    REIFIED_PROPERTIES_OPERATION_TEMPLATE_MAPPING
+    REIFIED_PROPERTIES_OPERATION_TEMPLATE_MAPPING, TYPE_OF_ACTION_MAPPING
 from dqgen.services.query_generator import QueryGenerator
 
 
@@ -23,9 +23,12 @@ def generate_class_level_queries(processed_csv_file: pd.DataFrame, output_folder
     """
 
     for cls in processed_csv_file["class"].unique():
+        preview_property = processed_csv_file[(processed_csv_file["class"] == cls)]["preview property"].values[0]
         for operation, template in CLASSES_OPERATION_TEMPLATE_MAPPING.items():
             QueryGenerator(cls=cls, operation=operation,
-                           output_folder_path=output_folder_path, template=template).to_file()
+                           output_folder_path=output_folder_path, template=template,
+                           type_of_action=TYPE_OF_ACTION_MAPPING[operation],
+                           preview_property=preview_property).to_file()
 
     logging.info("Generated instance queries ...")
 
@@ -41,7 +44,8 @@ def generate_property_level_queries(processed_csv_file: pd.DataFrame, output_fol
                                prop=row["property"],
                                operation=operation,
                                output_folder_path=output_folder_path,
-                               template=template).to_file()
+                               template=template, preview_property=row["preview property"],
+                               type_of_action=TYPE_OF_ACTION_MAPPING[operation]).to_file()
 
     logging.info("Generated property queries ...")
 
@@ -58,7 +62,8 @@ def generate_reified_property_level_queries(processed_csv_file: pd.DataFrame, ou
                                object_property=row["object property"],
                                operation=operation,
                                output_folder_path=output_folder_path,
-                               template=template).to_file()
+                               template=template, preview_property=row["preview property"],
+                               type_of_action=TYPE_OF_ACTION_MAPPING[operation]).to_file()
 
     logging.info("Generated reified property queries ...")
 
