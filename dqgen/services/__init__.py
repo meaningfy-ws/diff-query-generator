@@ -47,6 +47,33 @@ REIFIED_PROPERTIES_OPERATION_TEMPLATE_MAPPING = {
     "count_changed_reified": QUERIES_TEMPLATES.get_template("count_reified_movement_cross_property.rq")
 }
 
+TYPE_OF_ACTION_MAPPING = {
+    "added_instance": "Addition",
+    "deleted_instance": "Deletion",
+    "count_added_instance": "Count",
+    "count_deleted_instance": "Count",
+    "added_property": "Addition",
+    "deleted_property": "Deletion",
+    "updated_property": "Value update",
+    "moved_property": "Movement (cross instance)",
+    "changed_property": "Movement (cross property)",
+    "count_added_property": "Count",
+    "count_deleted_property": "Count",
+    "count_updated_property": "Count",
+    "count_moved_property": "Count",
+    "count_changed_property": "Count",
+    "added_reified": "Addition",
+    "deleted_reified": "Deletion",
+    "updated_reified": "Value update",
+    "moved_reified": "Movement (cross instance)",
+    "changed_reified": "Movement (cross property)",
+    "count_added_reified": "Count",
+    "count_deleted_reified": "Count",
+    "count_updated_reified": "Count",
+    "count_moved_reified": "Count",
+    "count_changed_reified": "Count"
+}
+
 INSTANCE_OPERATIONS = ["added_instance", "deleted_instance"]
 PROPERTIES_OPERATIONS = ["added_property", "deleted_property", "updated_property", "moved_property", "changed_property"]
 REIFIED_PROPERTIES_OPERATIONS = ["added_reified", "deleted_reified", "updated_reified", "moved_reified",
@@ -55,4 +82,4 @@ REIFIED_PROPERTIES_OPERATIONS = ["added_reified", "deleted_reified", "updated_re
 TEMPLATE_AND_HTML_FILE_NAME_MAPPING = {"main.html": HTML_TEMPLATES.get_template("main.jinja2"),
                                        "statistics.html": HTML_TEMPLATES.get_template("statistics.jinja2")}
 
-QUERY_FALLBACK_LANGUAGES = ["en", "fr", "de", "es"]
+QUERY_FALLBACK_LANGUAGES = ["en"]

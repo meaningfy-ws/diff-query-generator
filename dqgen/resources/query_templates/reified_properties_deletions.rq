@@ -34,7 +34,7 @@ PREFIX sd: <http://www.w3.org/ns/sparql-service-description#>
 PREFIX sh: <http://purl.org/skos-history/>
 PREFIX xhv: <http://www.w3.org/1999/xhtml/vocab#>
 # Show all deleted reified structures
-SELECT DISTINCT ?instance ?prefLabel ?prefLabelLang ?property ?objProperty ?value ?valueLang
+SELECT DISTINCT ?instance ?class ?prefLabel ?prefLabelLang ?property ?object ?objProperty ?value ?valueLang ("{{type_of_action}}" as ?actionType)
 WHERE {
   GRAPH ?versionHistoryGraph {
     # parameters
@@ -91,7 +91,7 @@ WHERE {
     ?object ?objProperty ?value .
     {% for lang in languages %}
     optional {
-      ?instance skos:prefLabel ?prefLabel{{lang|title}} .
+      ?instance {{ preview_property }} ?prefLabel{{lang|title}} .
       FILTER (lang(?prefLabel{{lang|title}}) = "{{ lang }}")
     }
     {% endfor %}

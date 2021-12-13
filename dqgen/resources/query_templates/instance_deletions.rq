@@ -40,7 +40,7 @@ PREFIX xhv: <http://www.w3.org/1999/xhtml/vocab#>
 # as bad practice, because they still may be referenced elsewhere.
 # Cosider using owl:deprecated instead)
 
-SELECT distinct ?class ?instance ?prefLabel ?prefLabelLang
+SELECT distinct ?class ?instance ?prefLabel ?prefLabelLang ("{{type_of_action}}" as ?actionType)
 WHERE {
   GRAPH ?versionHistoryGraph {
     # parameters
@@ -86,7 +86,7 @@ WHERE {
 
     {% for lang in languages %}
     optional {
-      ?instance skos:prefLabel ?prefLabel{{lang|title}} .
+      ?instance {{ preview_property }} ?prefLabel{{lang|title}} .
       FILTER (lang(?prefLabel{{lang|title}}) = "{{ lang }}")
     }
     {% endfor %}
