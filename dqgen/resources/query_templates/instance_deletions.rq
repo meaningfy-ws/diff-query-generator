@@ -85,12 +85,21 @@ WHERE {
     ?instance a ?class .
 
     {% for lang in languages %}
+    {% if preview_object_property == "" %}
     optional {
       ?instance {{ preview_property }} ?prefLabel{{lang|title}} .
       FILTER (lang(?prefLabel{{lang|title}}) = "{{ lang }}")
     }
+    {% else %}
+    optional {
+      ?instance {{ preview_property }} ?prefLabelObj .
+      ?prefLabelObj {{ preview_object_property }} ?prefLabel{{lang|title}} .
+      FILTER (lang(?prefLabel{{lang|title}}) = "{{ lang }}")
+    }
+    {% endif %}
     {% endfor %}
     {% if languages|length > 1 %}
+    {% if preview_object_property == "" %}
     {
       SELECT ?instance (SAMPLE (?prefLabel) as ?prefLabelRandom)
       {
@@ -98,6 +107,16 @@ WHERE {
       }
       GROUP BY ?instance order by ?prefLabel
     }
+    {% else %}
+     {
+        SELECT ?instance (SAMPLE (?prefLabel) as ?prefLabelRandom)
+        {
+            ?instance {{ preview_property }} ?prefLabelObj .
+            ?prefLabelObj {{ preview_object_property }} ?prefLabel
+        }
+        GROUP BY ?instance order by ?prefLabel
+     }
+     {% endif %}
     BIND(COALESCE({% for lang in languages -%}
                    ?prefLabel{{lang|title}}{{ ", " }}
                    {%- endfor -%}?prefLabelRandom) as ?prefLabel)

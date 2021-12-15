@@ -1,80 +1,24 @@
-class,property,object property,modifiable,language dependent,property group
-skos:Concept,skosxl:prefLabel,skosxl:literalForm,1,1,preferred labels
-skos:Concept,skosxl:prefLabel,owl:deprecated,1,,preferred labels
-skos:Concept,skosxl:prefLabel,dct:type,1,,preferred labels
-skos:Concept,skosxl:prefLabel,euvoc:startDate,1,,preferred labels
-skos:Concept,skosxl:prefLabel,euvoc:endDate,1,,preferred labels
-skos:Concept,skosxl:altLabel,skosxl:literalForm,1,1,alternative labels
-skos:Concept,skosxl:altLabel,owl:deprecated,1,,alternative labels
-skos:Concept,skosxl:altLabel,dct:type,1,,alternative labels
-skos:Concept,skosxl:altLabel,euvoc:startDate,1,,alternative labels
-skos:Concept,skosxl:altLabel,euvoc:endDate,1,,alternative labels
-skos:Concept,skosxl:hiddenLabel,skosxl:literalForm,1,1,hidden labels
-skos:Concept,skosxl:hiddenLabel,owl:deprecated,1,,hidden labels
-skos:Concept,skosxl:hiddenLabel,dct:type,1,,hidden labels
-skos:Concept,skosxl:hiddenLabel,euvoc:startDate,1,,hidden labels
-skos:Concept,skosxl:hiddenLabel,euvoc:endDate,1,,hidden labels
-skos:Concept,skos:notation,rdf:value,1,,notes properties
-skos:Concept,skos:notation,owl:deprecated,1,,notes properties
-skos:Concept,skos:notation,dct:type,1,,notes properties
-skos:Concept,skos:note,rdf:value,1,1,notes properties
-skos:Concept,skos:note,owl:deprecated,1,,notes properties
-skos:Concept,skos:note,dct:type,1,,notes properties
-skos:Concept,skos:note,dct:source,1,,notes properties
-skos:Concept,skos:changeNote,rdf:value,1,1,notes properties
-skos:Concept,skos:changeNote,owl:deprecated,1,,notes properties
-skos:Concept,skos:changeNote,dct:type,1,,notes properties
-skos:Concept,skos:changeNote,dct:source,1,,notes properties
-skos:Concept,skos:definition,rdf:value,1,1,notes properties
-skos:Concept,skos:definition,owl:deprecated,1,,notes properties
-skos:Concept,skos:definition,dct:type,1,,notes properties
-skos:Concept,skos:definition,dct:source,1,,notes properties
-skos:Concept,skos:editorialNote,rdf:value,1,,notes properties
-skos:Concept,skos:editorialNote,owl:deprecated,1,,notes properties
-skos:Concept,skos:editorialNote,dct:type,1,,notes properties
-skos:Concept,skos:editorialNote,dct:source,1,,notes properties
-skos:Concept,skos:example,rdf:value,1,1,notes properties
-skos:Concept,skos:example,owl:deprecated,1,,notes properties
-skos:Concept,skos:example,dct:type,1,,notes properties
-skos:Concept,skos:example,dct:source,1,,notes properties
-skos:Concept,skos:historyNote,rdf:value,1,1,notes properties
-skos:Concept,skos:historyNote,owl:deprecated,1,,notes properties
-skos:Concept,skos:historyNote,dct:type,1,,notes properties
-skos:Concept,skos:historyNote,dct:source,1,,notes properties
-skos:Concept,skos:scopeNote,rdf:value,1,1,notes properties
-skos:Concept,skos:scopeNote,owl:deprecated,1,,notes properties
-skos:Concept,skos:scopeNote,dct:type,1,,notes properties
-skos:Concept,skos:scopeNote,dct:source,1,,notes properties
-skos:Concept,skos:semanticRelation,,,,semantic properties
-skos:Concept,skos:broader,,,,semantic properties
-skos:Concept,skos:narrower,,,,semantic properties
-skos:Concept,skos:related,,,,semantic properties
-skos:Concept,skos:broaderTransitive,,,,semantic properties
-skos:Concept,skos:narrowerTransitive,,,,semantic properties
-skos:Concept,skos:mappingRelation,,,,mapping properties
-skos:Concept,skos:closeMatch,,,,mapping properties
-skos:Concept,skos:exactMatch,,,,mapping properties
-skos:Concept,skos:broadMatch,,,,mapping properties
-skos:Concept,skos:narrowMatch,,,,mapping properties
-skos:Concept,skos:relatedMatch,,,,mapping properties
-skos:Concept,skos:inScheme,,,,scheme properties
-skos:Concept,skos:topConceptOf,,,,concept evolution properties
-skos:Concept,dct:replaces,,,,mapping properties
-skos:Concept,euvoc:endDate,,1,,concept evolution properties
-skos:Concept,euvoc:startDate,,1,,concept evolution properties
-skos:Concept,owl:deprecated,,1,,concept evolution properties
-skos:Concept,owl:versionInfo,,1,,concept evolution properties
-skos:Collection,skosxl:prefLabel,skosxl:literalForm,1,1,preferred labels
-skos:OrderedCollection,skosxl:prefLabel,skosxl:literalForm,1,1,preferred labels
-skos:ConceptScheme,skosxl:prefLabel,skosxl:literalForm,1,1,preferred labels
-skos:ConceptScheme,euvoc:domain,,1,,identifiers properties
-skos:ConceptScheme,dct:identifier,,1,,identifiers properties
-skos:ConceptScheme,skosxl:prefLabel,skosxl:literalForm,1,1,preferred labels
-skos:ConceptScheme,skosxl:prefLabel,owl:deprecated,1,,preferred labels
-skos:ConceptScheme,skosxl:prefLabel,dct:type,1,,preferred labels
-skos:ConceptScheme,owl:versionInfo,,1,,concept evolution properties
-skos:ConceptScheme,dct:identifier,,1,,identifiers properties
-skos:ConceptScheme,euvoc:domain,,1,,identifiers properties
-skos:ConceptScheme,dct:isPartOf,,,,concept evolution properties
-skos:ConceptScheme,dct:created,,1,,concept evolution properties
-skos:ConceptScheme,dct:modified,,1,,concept evolution properties
+class,property,object property,property group,preview property,preview object property
+skos:ConceptScheme,skos:prefLabel,,labels,skos:prefLabel,
+skos:ConceptScheme,skos:hasTopConcept,,semantic properties,skos:prefLabel,
+skos:ConceptScheme,skos:altLabel,,labels,skos:prefLabel,
+skos:Concept,skos:inScheme,,semantic properties,skos:prefLabel,
+skos:Concept,skos:topConceptOf,,semantic properties,skos:prefLabel,
+skos:Concept,skos:notation,,notes,skos:prefLabel,
+skos:Concept,skos:prefLabel,,labels,skos:prefLabel,
+skos:Concept,skos:altLabel,,labels,skos:prefLabel,
+skos:Concept,skos:hiddenLabel,,labels,skos:prefLabel,
+skos:Concept,skos:changeNote,,notes,skos:prefLabel,
+skos:Concept,skos:definition,,notes,skos:prefLabel,
+skos:Concept,skos:example,,notes,skos:prefLabel,
+skos:Concept,skos:historyNote,,notes,skos:prefLabel,
+skos:Concept,skos:scopeNote,,notes,skos:prefLabel,
+skos:Concept,skos:editorialNote,,notes,skos:prefLabel,
+skos:Concept,skos:broader,,semantic properties,skos:prefLabel,
+skos:Concept,skos:narrower,,semantic properties,skos:prefLabel,
+skos:Concept,skos:related,,semantic properties,skos:prefLabel,
+skos:Concept,skos:broadMatch,,mapping properties,skos:prefLabel,
+skos:Concept,skos:narrowMatch,,mapping properties,skos:prefLabel,
+skos:Concept,skos:closeMatch,,mapping properties,skos:prefLabel,
+skos:Concept,skos:exactMatch,,mapping properties,skos:prefLabel,
+skos:Concept,skos:relatedMatch,,mapping properties,skos:prefLabel,

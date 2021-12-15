@@ -19,11 +19,12 @@ class QueryGenerator(BaseGenerator):
     def __init__(self, cls: str, operation: str, output_folder_path: str, template: Template, prop: str = None,
                  object_property: str = None, new_version_graph: str = None, old_version_graph: str = None,
                  version_history_graph: str = None, languages: list = QUERY_FALLBACK_LANGUAGES,
-                 preview_property: str = "skos:prefLabel", type_of_action: str = ""):
+                 preview_property: str = "skos:prefLabel", type_of_action: str = "", preview_object_property: str = ""):
         super().__init__(cls, operation, output_folder_path, template, prop, object_property, new_version_graph,
                          old_version_graph, version_history_graph, languages)
         self.file_extension = "rq"
         self.preview_property = preview_property
+        self.preview_object_property = preview_object_property
         self.type_of_action = type_of_action
 
     def build_template(self):
@@ -36,4 +37,5 @@ class QueryGenerator(BaseGenerator):
                                                      old_version=self.old_version_graph,
                                                      version_history_graph=self.version_history_graph,
                                                      languages=self.languages, preview_property=self.preview_property,
-                                                     type_of_action=self.type_of_action)
+                                                     type_of_action=self.type_of_action,
+                                                     preview_object_property=self.preview_object_property)

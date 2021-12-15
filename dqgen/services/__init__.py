@@ -83,4 +83,4 @@ TEMPLATE_AND_HTML_FILE_NAME_MAPPING = {"main.html": HTML_TEMPLATES.get_template(
                                        "statistics.html": HTML_TEMPLATES.get_template("statistics.jinja2")}
 
 # QUERY_FALLBACK_LANGUAGES = ["en", "fr", "de", "es"]
-QUERY_FALLBACK_LANGUAGES = ["en"]
+QUERY_FALLBACK_LANGUAGES = ["en", "fr"]

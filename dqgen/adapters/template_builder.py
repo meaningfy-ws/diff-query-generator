@@ -12,9 +12,10 @@ import jinja2.environment
 
 def build_query_template(jinja2_template: Template, cls: str, prop: str, obj_prop: str, languages: list,
                          version_history_graph: str, old_version: str, new_version: str, preview_property: str,
-                         type_of_action: str) -> jinja2.environment.TemplateStream:
+                         type_of_action: str, preview_object_property: str) -> jinja2.environment.TemplateStream:
     """
         given a jinja template and a set of (data) parameters render the template.
+    :param preview_object_property:
     :param type_of_action:
     :param preview_property:
     :param old_version:
@@ -35,6 +36,7 @@ def build_query_template(jinja2_template: Template, cls: str, prop: str, obj_pro
                                   oldVersion=old_version,
                                   newVersion=new_version,
                                   preview_property=preview_property,
+                                  preview_object_property=preview_object_property,
                                   type_of_action=type_of_action)
 
 

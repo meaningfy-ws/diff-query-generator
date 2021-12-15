@@ -8,7 +8,9 @@ def test_query_template_builder():
     template = HTML_TEMPLATES.get_template("instance.jinja2")
     built_template = build_query_template(jinja2_template=template, cls="skos:Concept", old_version=None,
                                           new_version=None,
-                                          version_history_graph=None, obj_prop=None, prop=None, lang="en")
+                                          version_history_graph=None, obj_prop=None, prop=None, languages=["en"],
+                                          type_of_action="addition", preview_object_property="",
+                                          preview_property="skos:prefLabel")
     assert isinstance(built_template, jinja2.environment.TemplateStream)
 
 

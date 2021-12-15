@@ -6,7 +6,7 @@ from dqgen.adapters.resource_fetcher import get_file_content
 from dqgen.services.queries_generator import generate_class_level_queries, generate_from_csv
 
 PATH_TO_APS = pathlib.Path(__file__).parent.parent / "test_data" / "aps"
-PATH_TO_CSV_FILE = PATH_TO_APS / "skos_core.csv"
+PATH_TO_CSV_FILE = PATH_TO_APS / "src_ap_mod.csv"
 
 
 def test_generate_class_level_queries(tmp_path):
@@ -24,8 +24,8 @@ def test_generate_class_level_queries(tmp_path):
 
 
 def test_generate_from_csv(tmp_path):
-    generate_from_csv(ap_file_path= PATH_TO_APS / "skos_core.csv",output_base_dir=tmp_path)
+    generate_from_csv(ap_file_path= PATH_TO_APS / "src_ap_mod.csv",output_base_dir=tmp_path)
 
     assert pathlib.Path(tmp_path).is_dir()
-    assert pathlib.Path(tmp_path / "skos_core" / "queries").is_dir()
-    assert pathlib.Path(tmp_path / "skos_core" / "queries" / "added_instance_concept_scheme.rq").is_file()
+    assert pathlib.Path(tmp_path / "src_ap_mod" / "queries").is_dir()
+    assert pathlib.Path(tmp_path / "src_ap_mod" / "queries" / "added_instance_concept_scheme.rq").is_file()

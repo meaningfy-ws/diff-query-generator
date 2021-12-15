@@ -25,9 +25,10 @@ def test_instance_additions_generator(tmp_path):
 
 
 def test_simple_property_additions_generator(tmp_path):
-    expected_query_text = """  FILTER NOT EXISTS {
+    expected_query_text = """
+  FILTER NOT EXISTS {
     GRAPH ?deletionsGraph {
-      [] ?property ?value .
+      ?instance ?property [] .
     }
   }"""
     query_generator = QueryGenerator(cls="skos:Concept", operation="added_property",
