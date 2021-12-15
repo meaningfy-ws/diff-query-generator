@@ -82,5 +82,4 @@ REIFIED_PROPERTIES_OPERATIONS = ["added_reified", "deleted_reified", "updated_re
 TEMPLATE_AND_HTML_FILE_NAME_MAPPING = {"main.html": HTML_TEMPLATES.get_template("main.jinja2"),
                                        "statistics.html": HTML_TEMPLATES.get_template("statistics.jinja2")}
 
-# QUERY_FALLBACK_LANGUAGES = ["en", "fr", "de", "es"]
-QUERY_FALLBACK_LANGUAGES = ["en", "fr"]
+QUERY_FALLBACK_LANGUAGES = ["en"]
