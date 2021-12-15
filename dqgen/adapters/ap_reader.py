@@ -11,7 +11,7 @@ import pandas as pd
 """
     This module is responsible for reading an application profile (for diffing) from a CSV file.
 """
-NA_VALUES = {"class": "", "property": "", "object property": "", "modifiable": 0, "language dependent": 0}
+NA_VALUES = {"class": "", "property": "", "object property": "", "preview property": "", "preview object property": ""}
 
 
 def read_ap_from_csv(ap_csv_file_path: pathlib.Path):

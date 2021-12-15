@@ -75,19 +75,38 @@ WHERE {
     ?newInstance ?property ?object .
     ?object ?objProperty ?value .
     {% for lang in languages %}
+    {% if preview_object_property == "" %}
     optional {
       ?newInstance {{ preview_property }} ?prefLabel{{lang|title}} .
       FILTER (lang(?prefLabel{{lang|title}}) = "{{ lang }}")
     }
+    {% else %}
+    optional {
+      ?newInstance {{ preview_property }} ?prefLabelObj .
+      ?prefLabelObj {{ preview_object_property }} ?prefLabel{{lang|title}} .
+      FILTER (lang(?prefLabel{{lang|title}}) = "{{ lang }}")
+    }
+    {% endif %}
     {% endfor %}
     {% if languages|length > 1 %}
+    {% if preview_object_property == "" %}
     {
       SELECT ?newInstance (SAMPLE (?prefLabel) as ?prefLabelRandom)
       {
-        ?newInstance { { preview_property } } ?prefLabel .
+        ?newInstance {{ preview_property }} ?prefLabel .
       }
       GROUP BY ?newInstance order by ?prefLabel
     }
+   {% else %}
+     {
+        SELECT ?newInstance (SAMPLE (?prefLabel) as ?prefLabelRandom)
+        {
+            ?newInstance {{ preview_property }} ?prefLabelObj .
+            ?prefLabelObj {{ preview_object_property }} ?prefLabel
+        }
+        GROUP BY ?newInstance order by ?prefLabel
+     }
+     {% endif %}
     BIND(COALESCE({% for lang in languages -%}
                    ?prefLabel{{lang|title}}{{ ", " }}
                    {%- endfor -%}?prefLabelRandom) as ?newInstancePrefLabel)
@@ -103,12 +122,21 @@ WHERE {
     ?oldInstance ?property ?oldObject .
     ?oldObject ?objProperty ?value .
     {% for lang in languages %}
+    {% if preview_object_property == "" %}
     optional {
       ?oldInstance {{ preview_property }} ?oldPrefLabel{{lang|title}} .
       FILTER (lang(?oldPrefLabel{{lang|title}}) = "{{ lang }}")
     }
+    {% else %}
+    optional {
+      ?oldInstance {{ preview_property }} ?prefLabelObj .
+      ?prefLabelObj {{ preview_object_property }} ?oldPrefLabel{{lang|title}} .
+      FILTER (lang(?oldPrefLabel{{lang|title}}) = "{{ lang }}")
+    }
+    {% endif %}
     {% endfor %}
     {% if languages|length > 1 %}
+    {% if preview_object_property == "" %}
         {
       SELECT ?oldInstance (SAMPLE (?prefLabelRd) as ?oldInstancePrefLabelRandom)
       {
@@ -116,6 +144,16 @@ WHERE {
       }
       GROUP BY ?oldInstance order by ?prefLabelRd
     }
+     {% else %}
+     {
+        SELECT ?oldInstance (SAMPLE (?prefLabelRd) as ?oldInstancePrefLabelRandom)
+        {
+            ?oldInstance {{ preview_property }} ?prefLabelObj .
+            ?prefLabelObj {{ preview_object_property }} ?prefLabelRd
+        }
+        GROUP BY ?oldInstance order by ?prefLabelRd
+     }
+     {% endif %}
     BIND(COALESCE({% for lang in languages -%}
                    ?oldPrefLabel{{lang|title}}{{ ", " }}
                    {%- endfor -%}?oldInstancePrefLabelRandom) as ?oldInstancePrefLabel)

@@ -1,7 +1,8 @@
 import pandas as pd
 import great_expectations as ge
 
-EXPECTED_COLUMNS = ["class", "property", "object property", "modifiable", "language dependent", "property group"]
+EXPECTED_COLUMNS = ["class", "property", "object property", "property group", "preview property",
+                    "preview object property"]
 
 
 def is_valid_ap(application_profile_df: pd.DataFrame):

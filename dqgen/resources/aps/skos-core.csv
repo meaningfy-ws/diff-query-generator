@@ -1,24 +1,24 @@
-class,property,object property,modifiable,language dependent,property group,preview property
-skos:ConceptScheme,skos:prefLabel,,,1,labels,skos:prefLabel
-skos:ConceptScheme,skos:hasTopConcept,,,,semantic properties,skos:prefLabel
-skos:ConceptScheme,skos:altLabel,,,1,labels,skos:prefLabel
-skos:Concept,skos:inScheme,,,,semantic properties,skos:prefLabel
-skos:Concept,skos:topConceptOf,,,,semantic properties,skos:prefLabel
-skos:Concept,skos:notation,,,1,notes,skos:prefLabel
-skos:Concept,skos:prefLabel,,,1,labels,skos:prefLabel
-skos:Concept,skos:altLabel,,,1,labels,skos:prefLabel
-skos:Concept,skos:hiddenLabel,,,1,labels,skos:prefLabel
-skos:Concept,skos:changeNote,,,1,notes,skos:prefLabel
-skos:Concept,skos:definition,,,1,notes,skos:prefLabel
-skos:Concept,skos:example,,,1,notes,skos:prefLabel
-skos:Concept,skos:historyNote,,,1,notes,skos:prefLabel
-skos:Concept,skos:scopeNote,,,1,notes,skos:prefLabel
-skos:Concept,skos:editorialNote,,,1,notes,skos:prefLabel
-skos:Concept,skos:broader,,,,semantic properties,skos:prefLabel
-skos:Concept,skos:narrower,,,,semantic properties,skos:prefLabel
-skos:Concept,skos:related,,,,semantic properties,skos:prefLabel
-skos:Concept,skos:broadMatch,,,,mapping properties,skos:prefLabel
-skos:Concept,skos:narrowMatch,,,,mapping properties,skos:prefLabel
-skos:Concept,skos:closeMatch,,,,mapping properties,skos:prefLabel
-skos:Concept,skos:exactMatch,,,,mapping properties,skos:prefLabel
-skos:Concept,skos:relatedMatch,,,,mapping properties,skos:prefLabel
+class,property,object property,property group,preview property,preview object property
+skos:ConceptScheme,skos:prefLabel,,labels,skos:prefLabel,
+skos:ConceptScheme,skos:hasTopConcept,,semantic properties,skos:prefLabel,
+skos:ConceptScheme,skos:altLabel,,labels,skos:prefLabel,
+skos:Concept,skos:inScheme,,semantic properties,skos:prefLabel,
+skos:Concept,skos:topConceptOf,,semantic properties,skos:prefLabel,
+skos:Concept,skos:notation,,notes,skos:prefLabel,
+skos:Concept,skos:prefLabel,,labels,skos:prefLabel,
+skos:Concept,skos:altLabel,,labels,skos:prefLabel,
+skos:Concept,skos:hiddenLabel,,labels,skos:prefLabel,
+skos:Concept,skos:changeNote,,notes,skos:prefLabel,
+skos:Concept,skos:definition,,notes,skos:prefLabel,
+skos:Concept,skos:example,,notes,skos:prefLabel,
+skos:Concept,skos:historyNote,,notes,skos:prefLabel,
+skos:Concept,skos:scopeNote,,notes,skos:prefLabel,
+skos:Concept,skos:editorialNote,,notes,skos:prefLabel,
+skos:Concept,skos:broader,,semantic properties,skos:prefLabel,
+skos:Concept,skos:narrower,,semantic properties,skos:prefLabel,
+skos:Concept,skos:related,,semantic properties,skos:prefLabel,
+skos:Concept,skos:broadMatch,,mapping properties,skos:prefLabel,
+skos:Concept,skos:narrowMatch,,mapping properties,skos:prefLabel,
+skos:Concept,skos:closeMatch,,mapping properties,skos:prefLabel,
+skos:Concept,skos:exactMatch,,mapping properties,skos:prefLabel,
+skos:Concept,skos:relatedMatch,,mapping properties,skos:prefLabel,
