@@ -17,7 +17,7 @@ install:
 
 test:
 	@ echo "$(BUILD_PRINT)Running the tests"
-	@ cd tests/unit && pytest
+	@ pytest
 
 #-----------------------------------------------------------------------------
 # Generator commands
