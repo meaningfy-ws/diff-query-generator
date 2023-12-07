@@ -1,0 +1,48 @@
+@prefix : <http://query-differ-dsa#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://query-differ-dsa> a owl:Ontology .
+
+:conceptScheme_8138d396 a skos:ConceptScheme;
+  skos:prefLabel "dsa"@en .
+
+:c_a6555570 a skos:Concept;
+  skos:inScheme :conceptScheme_8138d396;
+  skos:notation "con1";
+  skos:prefLabel "concept1"@en, "concept1ro"@ro;
+  skos:topConceptOf :conceptScheme_8138d396 .
+
+:c_f025f3e0 a skos:Concept;
+  skos:altLabel "altLabelConcept2cs"@cs;
+  skos:inScheme :conceptScheme_8138d396;
+  skos:notation "con-1", "con-2", "con2";
+  skos:prefLabel "concept2"@en, "concept2cs"@cs, "concept2es"@es, "concept2fr"@fr;
+  skos:topConceptOf :conceptScheme_8138d396 .
+
+:c_11d87de3 a skos:Concept;
+  skos:altLabel "altLabelConcept3es"@es, "oldAltLabelConcept3ro"@ro;
+  skos:inScheme :conceptScheme_8138d396;
+  skos:notation "con+3", "con3", "oldNotation3";
+  skos:prefLabel "concept3es"@es, "concept3fi"@fi;
+  skos:topConceptOf :conceptScheme_8138d396 .
+
+:c_d6a5481a a skos:Concept;
+  skos:example "en prefLabel deletion among multi langs";
+  skos:inScheme :conceptScheme_8138d396;
+  skos:prefLabel "concepto5"@es;
+  skos:topConceptOf :conceptScheme_8138d396 .
+
+:c_75cb24dd a skos:Concept;
+  skos:example "en prefLabel deletion among multi langs";
+  skos:inScheme :conceptScheme_8138d396;
+  skos:prefLabel "concepto4"@es;
+  skos:topConceptOf :conceptScheme_8138d396 .
+
+:c_2cfaa1cc a skos:Concept;
+  skos:example "crossPropertyMovement";
+  skos:inScheme :conceptScheme_8138d396;
+  skos:prefLabel "concept0"@en;
+  skos:topConceptOf :conceptScheme_8138d396 .
