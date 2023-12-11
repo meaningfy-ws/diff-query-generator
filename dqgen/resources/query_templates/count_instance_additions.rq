@@ -22,7 +22,8 @@ PREFIX prov: <http://www.w3.org/ns/prov#>
 
 PREFIX lemon: <http://lemon-model.net/lemon#> 
 PREFIX lexinfo: <http://www.lexinfo.net/ontology/2.0/lexinfo#> 
-PREFIX lexvo: <http://lexvo.org/ontology#> 
+PREFIX lexvo: <http://lexvo.org/ontology#>
+PREFIX vann: <http://purl.org/vocab/vann/>
 
 # legacy namespaces
 PREFIX oldevo: <http://eurovoc.europa.eu/schema#> 
