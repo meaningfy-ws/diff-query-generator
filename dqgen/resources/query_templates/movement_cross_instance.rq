@@ -66,7 +66,25 @@ WHERE {
     ?newInstance a ?class .
     ?newInstance ?property ?value .
     {% for lang in languages %}
-    {% if preview_object_property == "" %}
+    {% if preview_object_property == "" and preview_property == "" %}
+    # fall back to known labels if no preview property
+    optional {
+      ?instance rdfs:label ?rdfsLabel{{lang|title}} .
+      FILTER(LANG(?rdfsLabel{{lang|title}}) = "" || LANGMATCHES(LANG(?rdfsLabel{{lang|title}}), "{{ lang }}"))
+    }
+
+    optional {
+      ?instance skos:prefLabel ?skosLabel{{lang|title}} .
+      FILTER(LANG(?skosLabel{{lang|title}}) = "" || LANGMATCHES(LANG(?skosLabel{{lang|title}}), "{{ lang }}"))
+    }
+
+    optional {
+      ?instance shacl:name ?shaclName{{lang|title}} .
+      FILTER(LANG(?shaclName{{lang|title}}) = "" || LANGMATCHES(LANG(?shaclName{{lang|title}}), "{{ lang }}"))
+    }
+
+    BIND (COALESCE(?shaclName{{lang|title}}, ?skosLabel{{lang|title}}, ?rdfsLabel{{lang|title}}) AS ?prefLabel{{lang|title}})
+    {% elif preview_object_property == "" %}
     optional {
       ?newInstance {{ preview_property }} ?prefLabel{{lang|title}} .
       FILTER (lang(?prefLabel{{lang|title}}) = "{{ lang }}")
@@ -80,7 +98,16 @@ WHERE {
     {% endif %}
     {% endfor %}
     {% if languages|length > 1 %}
-    {% if preview_object_property == "" %}
+    {% if preview_object_property == "" and preview_property == "" %}
+    # fall back to alternative labels if no preview property
+     {
+        SELECT ?instance (SAMPLE (?prefLabel) as ?prefLabelRandom)
+        {
+            ?instance shacl:name|skos:prefLabel|rdfs:label ?prefLabel .
+        }
+        GROUP BY ?instance order by ?prefLabel
+     }
+    {% elif preview_object_property == "" %}
     {
         SELECT ?newInstance (SAMPLE (?prefLabel) as ?prefLabelRandom)
         {
@@ -112,7 +139,25 @@ WHERE {
     ?oldInstance a ?class .
     ?oldInstance ?property ?value .
     {% for lang in languages %}
-    {% if preview_object_property == "" %}
+    {% if preview_object_property == "" and preview_property == "" %}
+    # fall back to known labels if no preview property
+    optional {
+      ?instance rdfs:label ?rdfsLabel{{lang|title}} .
+      FILTER(LANG(?rdfsLabel{{lang|title}}) = "" || LANGMATCHES(LANG(?rdfsLabel{{lang|title}}), "{{ lang }}"))
+    }
+
+    optional {
+      ?instance skos:prefLabel ?skosLabel{{lang|title}} .
+      FILTER(LANG(?skosLabel{{lang|title}}) = "" || LANGMATCHES(LANG(?skosLabel{{lang|title}}), "{{ lang }}"))
+    }
+
+    optional {
+      ?instance shacl:name ?shaclName{{lang|title}} .
+      FILTER(LANG(?shaclName{{lang|title}}) = "" || LANGMATCHES(LANG(?shaclName{{lang|title}}), "{{ lang }}"))
+    }
+
+    BIND (COALESCE(?shaclName{{lang|title}}, ?skosLabel{{lang|title}}, ?rdfsLabel{{lang|title}}) AS ?oldPrefLabel{{lang|title}})
+    {% elif preview_object_property == "" %}
     optional {
       ?oldInstance {{ preview_property }} ?oldPrefLabel{{lang|title}} .
       FILTER (lang(?oldPrefLabel{{lang|title}}) = "{{ lang }}")
@@ -126,7 +171,16 @@ WHERE {
     {% endif %}
     {% endfor %}
     {% if languages|length > 1 %}
-    {% if preview_object_property == "" %}
+    {% if preview_object_property == "" and preview_property == "" %}
+    # fall back to alternative labels if no preview property
+     {
+        SELECT ?oldInstance (SAMPLE (?prefLabelRd) as ?oldInstancePrefLabelRandom)
+        {
+            ?oldInstance shacl:name|skos:prefLabel|rdfs:label ?prefLabelRd .
+        }
+        GROUP BY ?oldInstance order by ?prefLabelRd
+     }
+    {% elif preview_object_property == "" %}
     {
         SELECT ?oldInstance (SAMPLE (?prefLabelRd) as ?oldInstancePrefLabelRandom)
         {
