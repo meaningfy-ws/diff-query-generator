@@ -37,7 +37,7 @@ PREFIX xhv: <http://www.w3.org/1999/xhtml/vocab#>
 #
 # Show all properties value updates
 #
-SELECT DISTINCT ?instance (?prefLabel as ?instanceLabel) ?property (?old_value AS ?initialValue) (?value AS ?updatedValue)
+SELECT DISTINCT ?instance (?prefLabel as ?instanceLabel) ?property (?oldValue AS ?initialValue) (?newValue AS ?updatedValue)
 WHERE {
   GRAPH ?versionHistoryGraph {
     # parameters
@@ -72,7 +72,7 @@ WHERE {
   # get all property and values
   GRAPH ?newVersionGraph {
     ?instance a ?class .
-    ?instance ?property ?value .
+    ?instance ?property ?newValue .
     optional {
       ?instance skos:prefLabel ?prefLabel .
       #restrict prefLabel to a certain language
@@ -81,19 +81,26 @@ WHERE {
   }
   # ... which were attached to some (other) instance before and had another value
   GRAPH ?oldVersionGraph {
-      ?instance ?property ?old_value .
+      ?instance ?property ?oldValue .
   }
   # the old value shall be deleted
   GRAPH ?deletionsGraph {
-      ?instance ?property ?old_value .
+      ?instance ?property ?oldValue .
     }
   # the new value shall be inserted
   GRAPH ?insertionsGraph {
-      ?instance ?property ?value .
+      ?instance ?property ?newValue .
    }
-  # the language tag shall be the same
-
-  FILTER( lang(?old_value) = lang(?value) && ?old_value != ?value )
-
+  # handle both language-tagged literals and non-language-tagged values
+  FILTER(
+    (
+      # Case 1: Both values are language-tagged literals
+      (isLiteral(?oldValue) && isLiteral(?newValue) && lang(?oldValue) != "" && lang(?newValue) != "" && lang(?oldValue) = lang(?newValue))
+      ||
+      # Case 2: Both values are non-language-tagged literals or URIs
+      ((!isLiteral(?oldValue) || lang(?oldValue) = "") && (!isLiteral(?newValue) || lang(?newValue) = ""))
+    )
+    && ?oldValue != ?newValue
+  )
 }
-ORDER BY ?instance ?value
+ORDER BY ?instance ?newValue
