@@ -22,13 +22,13 @@ test:
 #-----------------------------------------------------------------------------
 # Generator commands
 #-----------------------------------------------------------------------------
-# example: make generate_queries ap=skos_core.csv output=./output
+# example: make generate_queries ap=dqgen/resources/aps/owl-core.csv output=./output
 generate_queries:
 	@ python -m dqgen.entrypoints.cli.generate_queries $(ap) $(output)
 
 #-----------------------------------------------------------------------------
 # Generator commands
 #-----------------------------------------------------------------------------
-# example: make generate_html_templates ap=skos_core.csv output=./output
+# example: make generate_html_templates ap=dqgen/resources/aps/owl-core.csv output=./output
 generate_html_templates:
 	@ python -m dqgen.entrypoints.cli.generate_html_template $(ap) $(output)
