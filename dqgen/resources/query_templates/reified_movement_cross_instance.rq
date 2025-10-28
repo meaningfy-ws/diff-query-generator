@@ -80,17 +80,17 @@ WHERE {
     {% if preview_object_property == "" and preview_property == "" %}
     # fall back to known labels if no preview property
     optional {
-      ?instance rdfs:label ?rdfsLabel{{lang|title}} .
+      ?newInstance rdfs:label ?rdfsLabel{{lang|title}} .
       FILTER(LANG(?rdfsLabel{{lang|title}}) = "" || LANGMATCHES(LANG(?rdfsLabel{{lang|title}}), "{{ lang }}"))
     }
 
     optional {
-      ?instance skos:prefLabel ?skosLabel{{lang|title}} .
+      ?newInstance skos:prefLabel ?skosLabel{{lang|title}} .
       FILTER(LANG(?skosLabel{{lang|title}}) = "" || LANGMATCHES(LANG(?skosLabel{{lang|title}}), "{{ lang }}"))
     }
 
     optional {
-      ?instance shacl:name ?shaclName{{lang|title}} .
+      ?newInstance shacl:name ?shaclName{{lang|title}} .
       FILTER(LANG(?shaclName{{lang|title}}) = "" || LANGMATCHES(LANG(?shaclName{{lang|title}}), "{{ lang }}"))
     }
 
@@ -112,11 +112,11 @@ WHERE {
     {% if preview_object_property == "" and preview_property == "" %}
     # fall back to alternative labels if no preview property
      {
-        SELECT ?instance (SAMPLE (?prefLabel) as ?prefLabelRandom)
+        SELECT ?newInstance (SAMPLE (?prefLabel) as ?prefLabelRandom)
         {
-            ?instance shacl:name|skos:prefLabel|rdfs:label ?prefLabel .
+            ?newInstance shacl:name|skos:prefLabel|rdfs:label ?prefLabel .
         }
-        GROUP BY ?instance order by ?prefLabel
+        GROUP BY ?newInstance order by ?prefLabel
      }
     {% elif preview_object_property == "" %}
     {
@@ -154,17 +154,17 @@ WHERE {
     {% if preview_object_property == "" and preview_property == "" %}
     # fall back to known labels if no preview property
     optional {
-      ?instance rdfs:label ?rdfsLabel{{lang|title}} .
+      ?oldInstance rdfs:label ?rdfsLabel{{lang|title}} .
       FILTER(LANG(?rdfsLabel{{lang|title}}) = "" || LANGMATCHES(LANG(?rdfsLabel{{lang|title}}), "{{ lang }}"))
     }
 
     optional {
-      ?instance skos:prefLabel ?skosLabel{{lang|title}} .
+      ?oldInstance skos:prefLabel ?skosLabel{{lang|title}} .
       FILTER(LANG(?skosLabel{{lang|title}}) = "" || LANGMATCHES(LANG(?skosLabel{{lang|title}}), "{{ lang }}"))
     }
 
     optional {
-      ?instance shacl:name ?shaclName{{lang|title}} .
+      ?oldInstance shacl:name ?shaclName{{lang|title}} .
       FILTER(LANG(?shaclName{{lang|title}}) = "" || LANGMATCHES(LANG(?shaclName{{lang|title}}), "{{ lang }}"))
     }
 
