@@ -53,6 +53,20 @@
             margin-top: 0.5em;
         }
 
+        /* Enable horizontal scrolling for wide tables */
+        #print-container {
+            overflow-x: auto;
+        }
+
+        .dataTables_wrapper {
+            overflow-x: auto;
+        }
+
+        table.display {
+            width: 100% !important;
+            min-width: 100%;
+        }
+
         @media print {
             #toc {
                 visibility: hidden;
@@ -122,9 +136,8 @@
                 'print'
             ],
             "lengthMenu": [[5, 15, 30, -1], [5, 15, 30, "All"]],
-            responsive: {
-                details: true
-            }
+            scrollX: true,
+            autoWidth: false
         });
         $("h2").each(function () {
             if (!$(this).next().is("section") && !$(this).next().is("h3") && !$(this).next().hasClass("dataTables_wrapper")) {
