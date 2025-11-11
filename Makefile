@@ -32,3 +32,10 @@ generate_queries:
 # example: make generate_html_templates ap=dqgen/resources/aps/owl-core.csv output=./output
 generate_html_templates:
 	@ python -m dqgen.entrypoints.cli.generate_html_template $(ap) $(output)
+
+#-----------------------------------------------------------------------------
+# Generator commands
+#-----------------------------------------------------------------------------
+# example: make generate_asciidoc_templates ap=dqgen/resources/aps/owl-core.csv output=./output
+generate_asciidoc_templates:
+	@ python -m dqgen.entrypoints.cli.generate_asciidoc_template $(ap) $(output)
