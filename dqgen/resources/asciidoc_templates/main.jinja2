@@ -1,0 +1,49 @@
+{% raw %}
+{% extends "layout.adoc" %}
+{% import "macros.adoc" as mc %}
+{% block content %}
+{% endraw %}
+
+This report is automatically generated from the {% raw %}{{ conf.dataset_name }}{% endraw %} RDF dataset on {% raw %}{{ conf.timestamp }}{% endraw %}
+and aims at presenting the difference between two versions of an RDFS/OWL vocabulary following the {% raw %}{{ conf.application_profile }}{% endraw %} application profile.
+
+== Report details
+
+*Dataset ID:* {% raw %}{{ conf.dataset_name }}{% endraw %}
+
+*Dataset name:* {% raw %}{{ conf.original_name }}{% endraw %}
+
+*Old version file:* {% raw %}{{ conf.old_version_file }}{% endraw %}
+
+*New version file:* {% raw %}{{ conf.new_version_file }}{% endraw %}
+
+*Time:* {% raw %}{{ conf.timestamp }}{% endraw %}
+
+*Application profile:* {% raw %}{{ conf.application_profile }}{% endraw %}
+
+{% raw %}
+{% set namespaces = namespace_inventory({}) %}
+{% include "statistics.adoc" %}
+{% endraw %}
+{% for class_key , class_data in data_source.items() %}
+== {{ class_data.label }}
+    {% if class_data.description is not undefined %}
+{{ class_data.description }}
+    {% endif %}
+    {% for instance_change_file in class_data.instance_changes.files %}
+        {{ "{% include " }}"{{ instance_change_file }}"{{ " with context %}" }}
+    {% endfor %}
+    {% for prop_group, prop_group_data in class_data.prop_groups.items() %}
+=== {{ prop_group_data.label }}
+        {% for prop_file in prop_group_data.query_template_file_paths %}
+            {{ "{% include " }}"{{ prop_file }}"{{ " with context %}" }}
+        {% endfor %}
+    {% endfor %}
+{% endfor %}
+{% raw %}
+== Prefixes
+
+{{ mc.render_namespaces(namespaces.namespaces_as_dict()) }}
+{% endblock %}
+{% endraw %}
+

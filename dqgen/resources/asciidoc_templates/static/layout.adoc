@@ -1,0 +1,7 @@
+{% raw %}
+= {{ conf.title }}
+
+{% block content %}
+{% endblock %}
+{% endraw %}
+
