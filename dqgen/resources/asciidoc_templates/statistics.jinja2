@@ -1,0 +1,57 @@
+{% raw %}
+{% import "macros.adoc" as mc %}
+{% endraw %}
+== Statistics
+
+    {% for class_key , class_data in data_source.items() %}
+=== {{ class_data.label }}
+        {% if class_data.description is not undefined %}
+{{ class_data.description }}
+        {% endif %}
+
+[cols="1,1,1", options="header"]
+|===
+|Instance
+|Added
+|Deleted
+
+|{{ class_data.label }}
+        {% for count_query in class_data.instance_changes.count_queries %}
+            {{ "{%" }} set content, error = from_endpoint(conf.default_endpoint).with_query_from_file(conf.query_files["{{ count_query }}"]).fetch_tabular() {{ "%}" }}
+            {% raw %}
+            {% call mc.render_fetch_results(content, error) %}
+            {{ mc.count_value(content) }}
+            {% endcall %}
+            {% endraw %}
+        {% endfor %}
+|===
+
+[cols="1,1,1,1,1,1,1", options="header"]
+|===
+|Property group
+|Property
+|Added
+|Deleted
+|Updated
+|Moved
+|Changed
+        {% for prop_group, prop_group_data in class_data.prop_groups.items() %}
+            {% set prop_group_name =  prop_group_data.label %}
+            {% for index ,count_prop_section in prop_group_data.count_queries.items() %}
+
+|{{ prop_group_name }}
+|{{ count_prop_section.label }}
+                {% for query_file in  count_prop_section.files %}
+                    {{ "{%" }} set content, error = from_endpoint(conf.default_endpoint).with_query_from_file(conf.query_files["{{ query_file }}"]).fetch_tabular() {{ "%}" }}
+                    {% raw %}
+                    {% call mc.render_fetch_results(content, error) %}
+                    {{ mc.count_value(content) }}
+                    {% endcall %}
+                    {% endraw %}
+                {% endfor %}
+            {% endfor %}
+        {% endfor %}
+|===
+
+    {% endfor %}
+
