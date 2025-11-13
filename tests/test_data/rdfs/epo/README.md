@@ -5,6 +5,11 @@ Given the following versions of a dataset:
 - **old:** `ePO_sample-4.0.0.orig.ttl`
 - **new:** `ePO_sample-4.0.0.upd.ttl`
 
+The **new** file is a _combined_ OWL and SHACL file that contains also
+embedded SHACL data, for testing retrieval of certain constraint information
+for added resources, such as the domain, range and cardinality, which would
+otherwise not be supported/available in the OWL-core profile.
+
 The following are changes comparing **old** to **new**, where _redundant_
 refers to redundant appearances in the existing diff'ing/reporting, and _not
 captured_ to the non-appearance thereof, due to one reason or another, that may
@@ -29,7 +34,7 @@ or may not be a bug:
 1. class **epo:AwardCriterion** added `rdfs:isDefinedBy` (redundant, from added class)
 1. class **epo:AdHocChannel** deleted `rdfs:isDefinedBy` (redundant, from deleted class)
 1. class **epo:AdHocChanel** moved `rdfs:isDefinedBy` to **epo:AwardCriterion** (redundant, part of added class)
-1. added objectProperty **epo:followsRulesSetBy**
+1. added objectProperty **epo:followsRulesSetBy** with domain `epo:PurchaseContract`, range `epo:FrameworkAgreement` and maxCardinality 1
 1. deleted objectProperty **epo:exposesChannel**
 1. objectProperty **epo:exposesInvoiceeChannel** added `rdfs:label`
 1. objectProperty **epo:followsRulesSetBy** added `skos:prefLabel` (redundant, from added objectProperty)
