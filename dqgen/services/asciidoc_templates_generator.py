@@ -5,9 +5,8 @@
 # Author: Generated for AsciiDoc template support
 import logging
 import pathlib
-from distutils.dir_util import copy_tree
+from shutil import copytree, copyfile
 from pathlib import Path
-from shutil import copyfile
 
 import numpy as np
 import pandas as pd
@@ -16,7 +15,7 @@ from dqgen.adapters.ap_reader import read_ap_from_csv
 from dqgen.services import INSTANCE_OPERATIONS, PROPERTIES_OPERATIONS, REIFIED_PROPERTIES_OPERATIONS, ASCII_DOC_TEMPLATES, \
     PATH_TO_ASCIIDOC_STATIC_FOLDER, TEMPLATE_AND_ASCIIDOC_FILE_NAME_MAPPING
 from dqgen.services.asciidoc_generator import AsciiDocGenerator
-from dqgen.services.html_templates_data_source_builder import build_datasource_for_html_template, camel_case_to_words
+from dqgen.services.templates_data_source_builder import build_datasource_for_template, camel_case_to_words
 from dqgen.services.validate_application_profile import validate_application_profile
 
 
@@ -98,7 +97,7 @@ def generate_asciidoc_template(processed_csv_file: pd.DataFrame, asciidoc_output
     :return:
     """
 
-    data_source = build_datasource_for_html_template(processed_csv_file=processed_csv_file)
+    data_source = build_datasource_for_template(processed_csv_file=processed_csv_file, file_extension='adoc')
     build_template = template.stream(data_source=data_source)
     build_template.dump(asciidoc_output_folder_path + "/" + file_name)
 
@@ -134,5 +133,6 @@ def generate_asciidoc_templates_from_csv(ap_file_path: pathlib.Path, output_base
         generate_asciidoc_template(processed_csv_file=processed_csv_file,
                                asciidoc_output_folder_path=str(asciidoc_output), template=template, file_name=file_name)
 
-    copy_tree(PATH_TO_ASCIIDOC_STATIC_FOLDER, str(asciidoc_output))
+    # copy static files into the generated asciidoc output directory
+    copytree(PATH_TO_ASCIIDOC_STATIC_FOLDER, str(asciidoc_output), dirs_exist_ok=True)
 

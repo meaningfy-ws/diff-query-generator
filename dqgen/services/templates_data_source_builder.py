@@ -16,7 +16,7 @@ def camel_case_to_words(name: str):
     return ' '.join(words)
 
 
-def generate_file_data(cls, class_folder_name, operation, prop=None, obj_prop=None):
+def generate_file_data(cls, class_folder_name, operation, prop=None, obj_prop=None, file_extension="html"):
     """
     This method will return a query file path and a count query file name
     :param cls: 
@@ -24,12 +24,13 @@ def generate_file_data(cls, class_folder_name, operation, prop=None, obj_prop=No
     :param operation: 
     :param prop: 
     :param obj_prop: 
+    :param file_extension: extension to use for the generated files (html/adoc)
     :return: 
     """
     file_path = make_file_path(output_folder_path=class_folder_name,
                                file_name=make_file_name(operation=operation,
                                                         cls=cls,
-                                                        file_extension="html",
+                                                        file_extension=file_extension,
                                                         prop=prop, obj_prop=obj_prop))
     count_file_name = make_file_name(operation="count_" + operation,
                                      cls=cls,
@@ -39,7 +40,7 @@ def generate_file_data(cls, class_folder_name, operation, prop=None, obj_prop=No
 
 
 def iterate_operations(operation_list, file_paths, count_queries, cls, class_folder_name, prop=None,
-                       obj_prop=None):
+                       obj_prop=None, file_extension="html"):
     """
     This method will iterate through a list of operations. It will put one query file path in the file paths list
      and one count query name in the count query list
@@ -50,22 +51,25 @@ def iterate_operations(operation_list, file_paths, count_queries, cls, class_fol
     :param class_folder_name: 
     :param prop: 
     :param obj_prop: 
+    :param file_extension: extension to use for generated file paths
     :return: 
     """
     for operation in operation_list:
         file_path, count_file_name = generate_file_data(cls=cls, class_folder_name=class_folder_name,
-                                                        operation=operation, prop=prop, obj_prop=obj_prop)
+                                                        operation=operation, prop=prop, obj_prop=obj_prop,
+                                                        file_extension=file_extension)
         file_paths.append(file_path)
         count_queries.append(count_file_name)
 
 
-def add_instance_changes(data_source, cls, class_name, class_folder_name):
+def add_instance_changes(data_source, cls, class_name, class_folder_name, file_extension="html"):
     """
     This method will build the necessary data at the class level and it will add it to a data source dictionary
     :param data_source: 
     :param cls: 
     :param class_name: 
     :param class_folder_name: 
+    :param file_extension: extension to use for generated file paths
     :return: 
     """
     if "instance_changes" not in data_source[cls].keys():
@@ -75,7 +79,8 @@ def add_instance_changes(data_source, cls, class_name, class_folder_name):
         instance_count_queries = []
 
         iterate_operations(operation_list=INSTANCE_OPERATIONS, file_paths=instance_file_paths,
-                           count_queries=instance_count_queries, cls=cls, class_folder_name=class_folder_name)
+                           count_queries=instance_count_queries, cls=cls, class_folder_name=class_folder_name,
+                           file_extension=file_extension)
 
         data_source[cls]["instance_changes"].update(
             {"files": instance_file_paths, "count_queries": instance_count_queries})
@@ -104,10 +109,11 @@ def add_prop_group_details(data_source, prop_group_value, cls, prop_name, prop_f
             {prop_name: {"files": count_prop_file_paths, "label": prop_name}})
 
 
-def build_datasource_for_html_template(processed_csv_file: pd.DataFrame) -> dict:
+def build_datasource_for_template(processed_csv_file: pd.DataFrame, file_extension: str = "html") -> dict:
     """
     This method will build a data source dictionary from a given application profile dataframe
     :param processed_csv_file: 
+    :param file_extension: extension to use for generated file paths (default: html)
     :return: 
     """
     data_source = {}
@@ -121,7 +127,7 @@ def build_datasource_for_html_template(processed_csv_file: pd.DataFrame) -> dict
             data_source[row["class"]] = {"label": camel_case_to_words(class_name).title(), "prop_groups": {}}
 
         add_instance_changes(data_source=data_source, cls=row["class"], class_name=class_name,
-                             class_folder_name=class_folder_name)
+                             class_folder_name=class_folder_name, file_extension=file_extension)
 
         prop_file_paths = []
         count_queries = []
@@ -130,16 +136,20 @@ def build_datasource_for_html_template(processed_csv_file: pd.DataFrame) -> dict
             prop_name = row["property"]
             iterate_operations(operation_list=PROPERTIES_OPERATIONS, file_paths=prop_file_paths,
                                count_queries=count_queries, cls=row["class"],
-                               class_folder_name=f'{class_folder_name}/{prop_group_folder}', prop=row["property"])
+                               class_folder_name=f'{class_folder_name}/{prop_group_folder}', prop=row["property"],
+                               file_extension=file_extension)
         else:
             prop_name = row["property"] + "/" + row["object property"]
             iterate_operations(operation_list=REIFIED_PROPERTIES_OPERATIONS, file_paths=prop_file_paths,
                                count_queries=count_queries, cls=row["class"],
                                class_folder_name=f'{class_folder_name}/{prop_group_folder}', prop=row["property"],
-                               obj_prop=row["object property"])
+                               obj_prop=row["object property"], file_extension=file_extension)
 
         add_prop_group_details(data_source=data_source, prop_group_value=row["property group"], cls=row["class"],
                                prop_name=prop_name, prop_file_paths=prop_file_paths,
                                count_prop_file_paths=count_queries)
 
     return data_source
+
+# Backwards compatibility alias
+build_datasource_for_html_template = build_datasource_for_template
