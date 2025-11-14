@@ -1,7 +1,7 @@
 import pathlib
 
 from dqgen.adapters.ap_reader import read_ap_from_csv
-from dqgen.services.html_templates_data_source_builder import camel_case_to_words, build_datasource_for_html_template, \
+from dqgen.services.templates_data_source_builder import camel_case_to_words, build_datasource_for_template, \
     generate_file_data, iterate_operations, add_instance_changes, add_prop_group_details
 
 
@@ -50,11 +50,47 @@ def test_add_prop_group_details():
                                                                                "preferred labels"].keys())
 
 
-def test_build_datasource_for_html_template():
+def test_build_datasource_for_hmtl_template():
     path_to_csv_file = pathlib.Path(__file__).parent.parent / "test_data" / "aps" / "src_ap_mod.csv"
     df = read_ap_from_csv(path_to_csv_file)
-    data_source = build_datasource_for_html_template(processed_csv_file=df)
+    data_source = build_datasource_for_template(processed_csv_file=df)
     print(data_source)
     assert isinstance(data_source, dict)
     assert 'skos:Concept', 'skos:Collection' in data_source.keys()
     assert "label", "prop_groups" in data_source["skos:Concept"].keys()
+
+    # check at least one class-level instance file uses .html
+    instance_files = data_source.get("skos:Concept", {}).get("instance_changes", {}).get("files", [])
+    assert any(f.endswith('.html') for f in instance_files)
+
+    # check a property-level file uses .html
+    prop_groups = data_source.get("skos:Concept", {}).get("prop_groups", {})
+    found = False
+    for group in prop_groups.values():
+        paths = group.get("query_template_file_paths", [])
+        if any(p.endswith('.html') for p in paths):
+            found = True
+            break
+    assert found, "No .html file paths found in property groups"
+
+
+def test_build_datasource_for_adoc_template():
+    # Ensure the data source builder emits .adoc file paths when requested
+    path_to_csv_file = pathlib.Path(__file__).parent.parent / "test_data" / "aps" / "src_ap_mod.csv"
+    df = read_ap_from_csv(path_to_csv_file)
+    data_source = build_datasource_for_template(processed_csv_file=df, file_extension="adoc")
+
+    # check at least one class-level instance file uses .adoc
+    instance_files = data_source.get("skos:Concept", {}).get("instance_changes", {}).get("files", [])
+    assert any(f.endswith('.adoc') for f in instance_files)
+
+    # check a property-level file uses .adoc
+    prop_groups = data_source.get("skos:Concept", {}).get("prop_groups", {})
+    # find any prop group entry and check its query template file paths
+    found = False
+    for group in prop_groups.values():
+        paths = group.get("query_template_file_paths", [])
+        if any(p.endswith('.adoc') for p in paths):
+            found = True
+            break
+    assert found, "No .adoc file paths found in property groups"

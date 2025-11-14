@@ -6,9 +6,8 @@
 # Email: costezki.eugen@gmail.com
 import logging
 import pathlib
-from distutils.dir_util import copy_tree
+from shutil import copytree, copyfile
 from pathlib import Path
-from shutil import copyfile
 
 import numpy as np
 import pandas as pd
@@ -18,7 +17,7 @@ from dqgen.adapters.ap_reader import read_ap_from_csv
 from dqgen.services import INSTANCE_OPERATIONS, PROPERTIES_OPERATIONS, REIFIED_PROPERTIES_OPERATIONS, HTML_TEMPLATES, \
     PATH_TO_STATIC_FOLDER, TEMPLATE_AND_HTML_FILE_NAME_MAPPING
 from dqgen.services.html_generator import HtmlGenerator
-from dqgen.services.html_templates_data_source_builder import build_datasource_for_html_template, camel_case_to_words
+from dqgen.services.templates_data_source_builder import build_datasource_for_template, camel_case_to_words
 from dqgen.services.validate_application_profile import validate_application_profile
 
 
@@ -100,7 +99,7 @@ def generate_html_template(processed_csv_file: pd.DataFrame, html_output_folder_
     :return:
     """
 
-    data_source = build_datasource_for_html_template(processed_csv_file=processed_csv_file)
+    data_source = build_datasource_for_template(processed_csv_file=processed_csv_file)
     build_template = template.stream(data_source=data_source)
     build_template.dump(html_output_folder_path + "/" + file_name)
 
@@ -136,4 +135,5 @@ def generate_html_templates_from_csv(ap_file_path: pathlib.Path, output_base_dir
         generate_html_template(processed_csv_file=processed_csv_file,
                                html_output_folder_path=str(html_output), template=template, file_name=file_name)
 
-    copy_tree(PATH_TO_STATIC_FOLDER, str(html_output))
+    # copy static files into the generated html output directory
+    copytree(PATH_TO_STATIC_FOLDER, str(html_output), dirs_exist_ok=True)

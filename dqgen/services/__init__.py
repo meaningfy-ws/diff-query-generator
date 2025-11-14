@@ -13,8 +13,10 @@ import pathlib
 from jinja2 import Environment, PackageLoader
 
 HTML_TEMPLATES = Environment(loader=PackageLoader("dqgen.resources", "html_templates"))
+ASCII_DOC_TEMPLATES = Environment(loader=PackageLoader("dqgen.resources", "asciidoc_templates"))
 QUERIES_TEMPLATES = Environment(loader=PackageLoader("dqgen.resources", "query_templates"))
 PATH_TO_STATIC_FOLDER = pathlib.Path(__file__).parent.parent / "resources" / "html_templates" / "static"
+PATH_TO_ASCIIDOC_STATIC_FOLDER = pathlib.Path(__file__).parent.parent / "resources" / "asciidoc_templates" / "static"
 
 CLASSES_OPERATION_TEMPLATE_MAPPING = {
     "added_instance": QUERIES_TEMPLATES.get_template("instance_additions.rq"),
@@ -81,6 +83,9 @@ REIFIED_PROPERTIES_OPERATIONS = ["added_reified", "deleted_reified", "updated_re
 
 TEMPLATE_AND_HTML_FILE_NAME_MAPPING = {"main.html": HTML_TEMPLATES.get_template("main.jinja2"),
                                        "statistics.html": HTML_TEMPLATES.get_template("statistics.jinja2")}
+
+TEMPLATE_AND_ASCIIDOC_FILE_NAME_MAPPING = {"main.adoc": ASCII_DOC_TEMPLATES.get_template("main.jinja2"),
+                                            "statistics.adoc": ASCII_DOC_TEMPLATES.get_template("statistics.jinja2")}
 
 MULTI_LANGUAGES = ["en", "fr", "de", "es"]
 SINGLE_LANGUAGE = ["en"]
