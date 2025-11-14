@@ -8,11 +8,6 @@
     {% set compress_uris = simplify_uri_columns_in_tabular(data_frame=content,namespace_inventory=namespaces,error_fail=False) %}
     {% endraw %}
 ==== {{ operation|title }} reified {{ property_name }}
-
-The table below lists the {{ operation }} *{{ property }} / {{ object_property }}*
-
-*Query identifier:* {{ query_file }}
-
     {{ "{{" }} mc.pandas_table(content, "{{ operation|title }} reified {{ property_name }}") {{ "}}" }}
     {% raw %}
     {% endcall %}
