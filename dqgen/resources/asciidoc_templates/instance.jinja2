@@ -7,7 +7,7 @@
    {% call mc.render_fetch_results(content, error) %}
     {% set compress_uris = simplify_uri_columns_in_tabular(data_frame=content,namespace_inventory=namespaces,error_fail=False) %}
     {% endraw %}
-== {{ operation|title }} {{ class_name }}s
+=== {{ operation|title }} {{ class_name }}s
 
 The table below lists the {{ operation }} *{{ cls }}*
 
@@ -17,5 +17,4 @@ The table below lists the {{ operation }} *{{ cls }}*
     {% raw %}
     {% endcall %}
 {% endif %}
-    {% endraw %}
-
+{% endraw %}

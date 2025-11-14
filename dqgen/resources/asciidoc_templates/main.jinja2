@@ -3,7 +3,6 @@
 {% import "macros.adoc" as mc %}
 {% block content %}
 {% endraw %}
-
 This report is automatically generated from the {% raw %}{{ conf.dataset_name }}{% endraw %} RDF dataset on {% raw %}{{ conf.timestamp }}{% endraw %}
 and aims at presenting the difference between two versions of an RDFS/OWL vocabulary following the {% raw %}{{ conf.application_profile }}{% endraw %} application profile.
 
@@ -42,8 +41,6 @@ and aims at presenting the difference between two versions of an RDFS/OWL vocabu
 {% endfor %}
 {% raw %}
 == Prefixes
-
 {{ mc.render_namespaces(namespaces.namespaces_as_dict()) }}
 {% endblock %}
 {% endraw %}
-

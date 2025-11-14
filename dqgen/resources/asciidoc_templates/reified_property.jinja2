@@ -7,7 +7,7 @@
     {% call mc.render_fetch_results(content, error) %}
     {% set compress_uris = simplify_uri_columns_in_tabular(data_frame=content,namespace_inventory=namespaces,error_fail=False) %}
     {% endraw %}
-=== {{ operation|title }} reified {{ property_name }}
+==== {{ operation|title }} reified {{ property_name }}
 
 The table below lists the {{ operation }} *{{ property }} / {{ object_property }}*
 
@@ -17,5 +17,4 @@ The table below lists the {{ operation }} *{{ property }} / {{ object_property }
     {% raw %}
     {% endcall %}
 {% endif %}
-    {% endraw %}
-
+{% endraw %}
