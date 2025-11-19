@@ -21,10 +21,10 @@
     {% endif %}
 {%- endmacro %}
 
-
 {% macro pandas_table(df, caption, column_labels={}) -%}
     {% if (df is defined) and (df is not none) %}
         {% set df = df.fillna(value="") %}
+.{{ caption }}
 [cols="{{ df.columns|length }}*", options="header"]
 |===
         {% for column in df.columns %}
@@ -47,8 +47,6 @@
 
         {% endfor %}
 |===
-
-.{{ caption }}
     {% else %}
         {{ render_error("How did you get here? did you forget to use 'render_fetch_results' macro?") }}
     {% endif %}
@@ -63,6 +61,7 @@
 {% endmacro %}
 
 {% macro render_namespaces(namesapces_dist) %}
+.Prefixes
 [cols="1,3", options="header"]
 |===
 |Namespace
@@ -74,7 +73,4 @@
 
         {% endfor %}
 |===
-
-.Prefixes
 {% endmacro %}
-

@@ -7,15 +7,9 @@
     {% call mc.render_fetch_results(content, error) %}
     {% set compress_uris = simplify_uri_columns_in_tabular(data_frame=content,namespace_inventory=namespaces,error_fail=False) %}
     {% endraw %}
-=== {{ operation|title }} {{ property_name }}
-
-The table below lists the {{ operation }} *{{ property }}*
-
-*Query identifier:* {{ query_file }}
-
+==== {{ operation|title }} {{ property_name }}
     {{ "{{" }} mc.pandas_table(content, "{{ operation|title }} {{ property_name }}") {{ "}}" }}
     {% raw %}
     {% endcall %}
 {% endif %}
-    {% endraw %}
-
+{% endraw %}
