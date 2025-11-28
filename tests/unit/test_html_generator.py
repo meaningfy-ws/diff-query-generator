@@ -12,7 +12,7 @@ from tests.unit.test_queries_generator import PATH_TO_APS
 
 
 def test_instance_html_generator(tmp_path):
-    expected_text = """<h2 class="ui header">Added concepts</h2>"""
+    expected_text = """<h2 class="ui header">Added concept</h2>"""
     html_generator = HtmlGenerator(cls="skos:Concept", operation="added_instance", class_name="concept",
                                    output_folder_path=str(tmp_path),
                                    template=HTML_TEMPLATES.get_template("instance.jinja2"))
