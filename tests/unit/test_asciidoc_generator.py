@@ -12,7 +12,7 @@ from tests.unit.test_queries_generator import PATH_TO_APS
 
 
 def test_instance_asciidoc_generator(tmp_path):
-    expected_text = """== Added concepts"""
+    expected_text = """== Added concept"""
     asciidoc_generator = AsciiDocGenerator(cls="skos:Concept", operation="added_instance", class_name="concept",
                                            output_folder_path=str(tmp_path),
                                            template=ASCII_DOC_TEMPLATES.get_template("instance.jinja2"))
