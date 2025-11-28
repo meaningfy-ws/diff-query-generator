@@ -7,12 +7,12 @@
    {% call mc.render_fetch_results(content, error) %}
     {% set compress_uris = simplify_uri_columns_in_tabular(data_frame=content,namespace_inventory=namespaces,error_fail=False) %}
     {% endraw %}
-    <h2 class="ui header">{{ operation|title }} {{ class_name }}s</h2>
+    <h2 class="ui header">{{ operation|title }} {{ class_name }}</h2>
     <section class="ui basic segment">
         <p>The table below lists the {{ operation }} <strong>{{ cls }}</strong>
         </p>
         <p><strong>Query identifier:</strong> {{ query_file }}</p>
-        {{ "{{" }} mc.pandas_table(content, "{{ operation|title }} {{ class_name }}s") {{ "}}" }}
+        {{ "{{" }} mc.pandas_table(content, "{{ operation|title }} {{ class_name }}") {{ "}}" }}
     </section>
     {% raw %}
     {% endcall %}
