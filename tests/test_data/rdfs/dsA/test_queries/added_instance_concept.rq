@@ -36,7 +36,7 @@ PREFIX xhv: <http://www.w3.org/1999/xhtml/vocab#>
 #
 # identify added instances
 #
-SELECT distinct ?class (?instance AS ?addedInstance) (?prefLabel AS ?addedInstanceLabel)
+SELECT distinct (?instance AS ?addedInstance) (?prefLabel AS ?addedInstanceLabel)
 WHERE {
   GRAPH ?versionHistoryGraph {
     # parameters
