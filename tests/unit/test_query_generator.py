@@ -87,11 +87,10 @@ def test_property_value_update_filter_captures_all_four_cases(tmp_path):
         content = get_file_content(query_generator.build_file_path())
         assert case_3 in content, template_name
         assert case_4 in content, template_name
-        # Guard: comments inside the FILTER must not contain parentheses. Some SPARQL
-        # endpoints (Jena/ARQ-style) match a NIL token "()" across a comment that holds a
-        # stray ")", breaking the query — keep the Case 3/4 comment text paren-free.
-        for line in content.splitlines():
-            stripped = line.strip()
-            if stripped.startswith("# Case "):
-                assert "(" not in stripped and ")" not in stripped, f"{template_name}: {stripped}"
+        # The pairing FILTER must be a single comment-free line. Some SPARQL endpoints
+        # (Jena/Fuseki, SPARQL 1.2) lex a NIL token "()" across a comment that holds a
+        # stray ")", so a multi-line, commented FILTER fails to parse there.
+        filter_line = next(line for line in content.splitlines() if "?oldValue != ?newValue" in line)
+        assert case_3 in filter_line and case_4 in filter_line, template_name
+        assert "#" not in filter_line, template_name
 

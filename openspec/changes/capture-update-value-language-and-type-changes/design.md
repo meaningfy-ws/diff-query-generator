@@ -35,30 +35,37 @@ old↔new pairings.
 
 ## The fix
 
-Append two cases inside the existing disjunction; keep the `&& ?oldValue != ?newValue` guard:
+Relax the disjunction to also pair (a) same lexical text with a changed/removed tag (#142)
+and (b) exactly-one-side-is-a-literal (#143), keeping the `?oldValue != ?newValue` guard.
+Emit it as a SINGLE comment-free line (see the Jena/Fuseki caveat below):
 
 ```sparql
-FILTER (
-  (
-    # Case 1: Both values are language-tagged literals with the same tag (changed text)
-    (isLiteral(?oldValue) && isLiteral(?newValue) && lang(?oldValue) != "" && lang(?newValue) != "" && lang(?oldValue) = lang(?newValue))
-    ||
-    # Case 2: Both values are non-language-tagged literals or URIs
-    ((!isLiteral(?oldValue) || lang(?oldValue) = "") && (!isLiteral(?newValue) || lang(?newValue) = ""))
-    ||
-    # Case 3 (#142): same lexical text, changed or removed language tag
-    (str(?oldValue) = str(?newValue))
-    ||
-    # Case 4 (#143): exactly one side is a literal (datatype <-> object property)
-    (isLiteral(?oldValue) != isLiteral(?newValue))
-  )
-  && ?oldValue != ?newValue
-)
+FILTER ( ( (isLiteral(?oldValue) && isLiteral(?newValue) && lang(?oldValue) != "" && lang(?newValue) != "" && lang(?oldValue) = lang(?newValue)) || ((!isLiteral(?oldValue) || lang(?oldValue) = "") && (!isLiteral(?newValue) || lang(?newValue) = "")) || (str(?oldValue) = str(?newValue)) || (isLiteral(?oldValue) != isLiteral(?newValue)) ) && ?oldValue != ?newValue )
 ```
 
+The four disjuncts are: (1) same non-empty language tag, changed text; (2) both plain
+literals **or both URIs**; (3) #142 same text, changed/removed tag; (4) #143 literal↔object.
 Apply identically to all four templates. The two `count_*` templates `SELECT (COUNT(...))`
 over the same WHERE/FILTER, so an identical relaxation keeps counts consistent with the detail
 queries (DEC-1).
+
+### Jena/Fuseki caveat — why one comment-free line (not a multi-line commented block)
+
+A SPARQL 1.2 endpoint (Apache Jena/Fuseki) mis-tokenizes a `NIL` (`()`) across a `#` comment
+that contains a stray `)` — e.g. a comment like `# ... (datatype <-> object property)` sitting
+**inside** the `FILTER(...)` expression. The `)` in the comment closes the bogus NIL and the
+query fails to parse (`QueryBadFormed`). rdflib and oxigraph (both spec-conformant) parse it
+fine, so it is an endpoint quirk — but the practical fix is ours: emit the FILTER on one line
+with no inline comments, so no `)` ever lives inside a comment in expression position.
+
+### Why not the compressed boolean
+
+A tempting shorter form —
+`FILTER( ?oldValue != ?newValue && ( lang(?oldValue) = lang(?newValue) || str(?oldValue) = str(?newValue) || (isLiteral(?oldValue) != isLiteral(?newValue)) ) )` —
+**regresses URI→URI updates** (object properties such as `skos:broader` whose IRI value
+changed). `lang()` on an IRI raises an error; with the other two disjuncts false the whole
+FILTER errors and the row is dropped. The four explicit cases above keep the original Case 2
+(URIs) behaviour. Verified empirically with oxigraph over labelled old/new value pairs.
 
 ### Edge cases the relaxation must not regress
 
@@ -90,3 +97,8 @@ queries (DEC-1).
 After regeneration, refresh rdf-differ's `resources/templates/**` from dqgen output so the
 hand-patch in rdf-differ 2.3.0 and this generator fix converge. Until then the two repos carry
 the same semantics by two routes — note this in the rdf-differ issues (#142/#143) and PR.
+
+> **Jena caveat (learned from rdf-differ 2.4.x):** keep the FILTER a single line with NO
+> inline comments. A `(` followed by a comment that contains `)` makes Jena/Fuseki emit
+> `Encountered <NIL>` (rdflib tolerates it). Use the comment-free form, e.g.
+> `FILTER( ?oldValue != ?newValue && ( lang(?oldValue) = lang(?newValue) || str(?oldValue) = str(?newValue) || ( isLiteral(?oldValue) != isLiteral(?newValue) ) ) )`.
