@@ -2,6 +2,9 @@
 
 BUILD_PRINT = \e[1;34mSTEP: \e[0m
 DEFAULT_OUTPUT := ./output
+# Prefer the project venv if present, so `make` works without activating it first.
+# Override with: make <target> PYTHON=/path/to/python
+PYTHON := $(shell [ -x .venv/bin/python ] && echo .venv/bin/python || echo python)
 APS_DIR := dqgen/resources/aps
 # Always generate for ALL application profiles discovered under APS_DIR.
 ALL_APS := $(patsubst %.csv,%,$(notdir $(wildcard $(APS_DIR)/*.csv)))
@@ -32,21 +35,21 @@ test:
 #-----------------------------------------------------------------------------
 # example: make generate_queries ap=dqgen/resources/aps/owl-core.csv output=./output
 generate_queries:
-	@ python -m dqgen.entrypoints.cli.generate_queries $(ap) $(output)
+	@ $(PYTHON) -m dqgen.entrypoints.cli.generate_queries $(ap) $(output)
 
 #-----------------------------------------------------------------------------
 # Generator commands
 #-----------------------------------------------------------------------------
 # example: make generate_html_templates ap=dqgen/resources/aps/owl-core.csv output=./output
 generate_html_templates:
-	@ python -m dqgen.entrypoints.cli.generate_html_template $(ap) $(output)
+	@ $(PYTHON) -m dqgen.entrypoints.cli.generate_html_template $(ap) $(output)
 
 #-----------------------------------------------------------------------------
 # Generator commands
 #-----------------------------------------------------------------------------
 # example: make generate_asciidoc_templates ap=dqgen/resources/aps/owl-core.csv output=./output
 generate_asciidoc_templates:
-	@ python -m dqgen.entrypoints.cli.generate_asciidoc_template $(ap) $(output)
+	@ $(PYTHON) -m dqgen.entrypoints.cli.generate_asciidoc_template $(ap) $(output)
 
 #-----------------------------------------------------------------------------
 # Batch generation for ALL profiles (flat layout: <output>/<ap>/{queries,html,asciidoc})
@@ -57,9 +60,9 @@ generate_all_profiles_templates:
 	echo "==> Generating all templates for: $(ALL_APS)"; \
 	for profile in $(ALL_APS); do \
 		ap_path=$(APS_DIR)/$${profile}.csv; \
-		echo "$(BUILD_PRINT)$$profile: queries"; python -m dqgen.entrypoints.cli.generate_queries $$ap_path $$out; \
-		echo "$(BUILD_PRINT)$$profile: html";    python -m dqgen.entrypoints.cli.generate_html_template $$ap_path $$out; \
-		echo "$(BUILD_PRINT)$$profile: asciidoc";python -m dqgen.entrypoints.cli.generate_asciidoc_template $$ap_path $$out; \
+		echo "$(BUILD_PRINT)$$profile: queries"; $(PYTHON) -m dqgen.entrypoints.cli.generate_queries $$ap_path $$out; \
+		echo "$(BUILD_PRINT)$$profile: html";    $(PYTHON) -m dqgen.entrypoints.cli.generate_html_template $$ap_path $$out; \
+		echo "$(BUILD_PRINT)$$profile: asciidoc";$(PYTHON) -m dqgen.entrypoints.cli.generate_asciidoc_template $$ap_path $$out; \
 	done
 
 #-----------------------------------------------------------------------------
@@ -74,9 +77,9 @@ generate_rdf_differ_bundles:
 	echo "==> Generating rdf-differ bundles for: $(ALL_APS) into $$out"; \
 	for ap in $(ALL_APS); do \
 		ap_path=$(APS_DIR)/$$ap.csv; \
-		echo "$(BUILD_PRINT)$$ap: queries"; python -m dqgen.entrypoints.cli.generate_queries $$ap_path $$out; \
-		echo "$(BUILD_PRINT)$$ap: html";    python -m dqgen.entrypoints.cli.generate_html_template $$ap_path $$out; \
-		echo "$(BUILD_PRINT)$$ap: asciidoc";python -m dqgen.entrypoints.cli.generate_asciidoc_template $$ap_path $$out; \
+		echo "$(BUILD_PRINT)$$ap: queries"; $(PYTHON) -m dqgen.entrypoints.cli.generate_queries $$ap_path $$out; \
+		echo "$(BUILD_PRINT)$$ap: html";    $(PYTHON) -m dqgen.entrypoints.cli.generate_html_template $$ap_path $$out; \
+		echo "$(BUILD_PRINT)$$ap: asciidoc";$(PYTHON) -m dqgen.entrypoints.cli.generate_asciidoc_template $$ap_path $$out; \
 		test -d $$out/$$ap/queries || { echo "ERROR: $$out/$$ap/queries missing - generation failed (check python env)"; exit 1; }; \
 		for v in $(BUNDLE_VARIANTS); do \
 			test -d $$out/$$ap/$$v || { echo "ERROR: $$out/$$ap/$$v missing - $$v generation failed"; exit 1; }; \
