@@ -1,8 +1,17 @@
 #include docker/.env
 
 BUILD_PRINT = \e[1;34mSTEP: \e[0m
-PREFERRED_PROFILES := owl-core shacl-core skos-core
 DEFAULT_OUTPUT := ./output
+# Prefer the project venv if present, so `make` works without activating it first.
+# Override with: make <target> PYTHON=/path/to/python
+PYTHON := $(shell [ -x .venv/bin/python ] && echo .venv/bin/python || echo python)
+APS_DIR := dqgen/resources/aps
+# Always generate for ALL application profiles discovered under APS_DIR.
+ALL_APS := $(patsubst %.csv,%,$(notdir $(wildcard $(APS_DIR)/*.csv)))
+# Template variants dqgen renders into the rdf-differ bundle.
+BUNDLE_VARIANTS := html asciidoc
+# Static (profile-independent) json variant shipped as a resource and copied verbatim.
+JSON_VARIANT_SRC := dqgen/resources/rdf_differ_bundle/json
 
 #-----------------------------------------------------------------------------
 # Install dev environment
@@ -26,38 +35,64 @@ test:
 #-----------------------------------------------------------------------------
 # example: make generate_queries ap=dqgen/resources/aps/owl-core.csv output=./output
 generate_queries:
-	@ python -m dqgen.entrypoints.cli.generate_queries $(ap) $(output)
+	@ $(PYTHON) -m dqgen.entrypoints.cli.generate_queries $(ap) $(output)
 
 #-----------------------------------------------------------------------------
 # Generator commands
 #-----------------------------------------------------------------------------
 # example: make generate_html_templates ap=dqgen/resources/aps/owl-core.csv output=./output
 generate_html_templates:
-	@ python -m dqgen.entrypoints.cli.generate_html_template $(ap) $(output)
+	@ $(PYTHON) -m dqgen.entrypoints.cli.generate_html_template $(ap) $(output)
 
 #-----------------------------------------------------------------------------
 # Generator commands
 #-----------------------------------------------------------------------------
 # example: make generate_asciidoc_templates ap=dqgen/resources/aps/owl-core.csv output=./output
 generate_asciidoc_templates:
-	@ python -m dqgen.entrypoints.cli.generate_asciidoc_template $(ap) $(output)
+	@ $(PYTHON) -m dqgen.entrypoints.cli.generate_asciidoc_template $(ap) $(output)
 
 #-----------------------------------------------------------------------------
-# Batch generation for multiple profiles
+# Batch generation for ALL profiles (flat layout: <output>/<ap>/{queries,html,asciidoc})
 #-----------------------------------------------------------------------------
-# Usage: make generate_all PREFERRED_PROFILES="owl-core another-profile" output=./output
-
+# Usage: make generate_all_profiles_templates output=./output
 generate_all_profiles_templates:
-	@ echo "==> Generating all templates for profiles $(PREFERRED_PROFILES)"
-	@ for profile in $(PREFERRED_PROFILES); do \
-		echo "--> profile: $$profile"; \
-		ap_path=dqgen/resources/aps/$${profile}.csv; \
-		echo "$(BUILD_PRINT)Generating queries for $$ap_path"; \
-		python -m dqgen.entrypoints.cli.generate_queries $$ap_path $(DEFAULT_OUTPUT); \
-		echo "$(BUILD_PRINT)Generating HTML templates for $$ap_path"; \
-		python -m dqgen.entrypoints.cli.generate_html_template $$ap_path $(DEFAULT_OUTPUT); \
-		echo "$(BUILD_PRINT)Generating AsciiDoc templates for $$ap_path"; \
-		python -m dqgen.entrypoints.cli.generate_asciidoc_template $$ap_path $(DEFAULT_OUTPUT); \
+	@ set -e; out=$(if $(output),$(output),$(DEFAULT_OUTPUT)); \
+	echo "==> Generating all templates for: $(ALL_APS)"; \
+	for profile in $(ALL_APS); do \
+		ap_path=$(APS_DIR)/$${profile}.csv; \
+		echo "$(BUILD_PRINT)$$profile: queries"; $(PYTHON) -m dqgen.entrypoints.cli.generate_queries $$ap_path $$out; \
+		echo "$(BUILD_PRINT)$$profile: html";    $(PYTHON) -m dqgen.entrypoints.cli.generate_html_template $$ap_path $$out; \
+		echo "$(BUILD_PRINT)$$profile: asciidoc";$(PYTHON) -m dqgen.entrypoints.cli.generate_asciidoc_template $$ap_path $$out; \
+	done
+
+#-----------------------------------------------------------------------------
+# rdf-differ bundles: for ALL profiles, emit the rdf-differ folder layout so the
+# per-profile folders can be copy/pasted into rdf-differ resources/templates/.
+#   <output>/<ap>/queries/
+#   <output>/<ap>/template_variants/<variant>/{config.json,templates/}
+#-----------------------------------------------------------------------------
+# Usage: make generate_rdf_differ_bundles output=./output
+generate_rdf_differ_bundles:
+	@ set -e; out=$(if $(output),$(output),$(DEFAULT_OUTPUT)); \
+	echo "==> Generating rdf-differ bundles for: $(ALL_APS) into $$out"; \
+	for ap in $(ALL_APS); do \
+		ap_path=$(APS_DIR)/$$ap.csv; \
+		echo "$(BUILD_PRINT)$$ap: queries"; $(PYTHON) -m dqgen.entrypoints.cli.generate_queries $$ap_path $$out; \
+		echo "$(BUILD_PRINT)$$ap: html";    $(PYTHON) -m dqgen.entrypoints.cli.generate_html_template $$ap_path $$out; \
+		echo "$(BUILD_PRINT)$$ap: asciidoc";$(PYTHON) -m dqgen.entrypoints.cli.generate_asciidoc_template $$ap_path $$out; \
+		test -d $$out/$$ap/queries || { echo "ERROR: $$out/$$ap/queries missing - generation failed (check python env)"; exit 1; }; \
+		for v in $(BUNDLE_VARIANTS); do \
+			test -d $$out/$$ap/$$v || { echo "ERROR: $$out/$$ap/$$v missing - $$v generation failed"; exit 1; }; \
+			mkdir -p $$out/$$ap/template_variants/$$v; \
+			rm -rf $$out/$$ap/template_variants/$$v/templates; \
+			mv $$out/$$ap/$$v $$out/$$ap/template_variants/$$v/templates; \
+			tmpl=main.html; [ "$$v" = asciidoc ] && tmpl=main.adoc; \
+			printf '{\n    "template": "%s",\n    "conf":\n    {\n        "default_endpoint": "http://localhost:3030/dataset_test/sparql",\n        "title": "RDF Diff report",\n        "type": "report",\n        "author": "Meaningfy",\n        "ns_file": "data/prefix.csv",\n        "query_folder_path": "resources/templates/%s/queries/"\n    }\n}\n' "$$tmpl" "$$ap" > $$out/$$ap/template_variants/$$v/config.json; \
+		done; \
+		rm -rf $$out/$$ap/template_variants/json; \
+		mkdir -p $$out/$$ap/template_variants/json; \
+		cp -r $(JSON_VARIANT_SRC)/. $$out/$$ap/template_variants/json/; \
+		echo "$(BUILD_PRINT)$$ap: bundled -> $$out/$$ap"; \
 	done
 
 clean:

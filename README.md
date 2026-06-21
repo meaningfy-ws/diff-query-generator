@@ -48,6 +48,11 @@ The table below presents the patterns of change likely to occur in the context o
 | Movement (cross instance) | 0         | i1 p v  -->  i2 p v  | 0                                 | i1 p/op v  -->  i2 p/op v | 0                                 | 0                  | x                       | x                        |
 | Movement (cross property) | 0         | i p1 v  -->  i p2 v  | 0                                 | i p1/op v  -->  i p2/op v | 0                                 | 0                  | x                       | x                        |
 
+The "Value update" change type also captures two patterns where the lexical value is unchanged but its language tag or its datatype/object nature changes (rdf-differ #142 and #143):
+
+- language-tag change or removal: `i p "x"@l1  -->  i p "x"@l2` and `i p "x"@l1  -->  i p "x"`
+- datatype value to object value (literal to IRI): `i p "x"  -->  i p <o>`
+
 The state transition patterns presented in the table above can be translated to SPARQL queries. The last two columns, referring to the quantification assumptions, are useful precisely for this purpose indicating what filters shall be used in the SPARQL query.  
 
 
