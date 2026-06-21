@@ -53,7 +53,7 @@ generate_asciidoc_templates:
 #-----------------------------------------------------------------------------
 # Usage: make generate_all_profiles_templates output=./output
 generate_all_profiles_templates:
-	@ out=$(if $(output),$(output),$(DEFAULT_OUTPUT)); \
+	@ set -e; out=$(if $(output),$(output),$(DEFAULT_OUTPUT)); \
 	echo "==> Generating all templates for: $(ALL_APS)"; \
 	for profile in $(ALL_APS); do \
 		ap_path=$(APS_DIR)/$${profile}.csv; \
@@ -70,14 +70,16 @@ generate_all_profiles_templates:
 #-----------------------------------------------------------------------------
 # Usage: make generate_rdf_differ_bundles output=./output
 generate_rdf_differ_bundles:
-	@ out=$(if $(output),$(output),$(DEFAULT_OUTPUT)); \
+	@ set -e; out=$(if $(output),$(output),$(DEFAULT_OUTPUT)); \
 	echo "==> Generating rdf-differ bundles for: $(ALL_APS) into $$out"; \
 	for ap in $(ALL_APS); do \
 		ap_path=$(APS_DIR)/$$ap.csv; \
 		echo "$(BUILD_PRINT)$$ap: queries"; python -m dqgen.entrypoints.cli.generate_queries $$ap_path $$out; \
 		echo "$(BUILD_PRINT)$$ap: html";    python -m dqgen.entrypoints.cli.generate_html_template $$ap_path $$out; \
 		echo "$(BUILD_PRINT)$$ap: asciidoc";python -m dqgen.entrypoints.cli.generate_asciidoc_template $$ap_path $$out; \
+		test -d $$out/$$ap/queries || { echo "ERROR: $$out/$$ap/queries missing - generation failed (check python env)"; exit 1; }; \
 		for v in $(BUNDLE_VARIANTS); do \
+			test -d $$out/$$ap/$$v || { echo "ERROR: $$out/$$ap/$$v missing - $$v generation failed"; exit 1; }; \
 			mkdir -p $$out/$$ap/template_variants/$$v; \
 			rm -rf $$out/$$ap/template_variants/$$v/templates; \
 			mv $$out/$$ap/$$v $$out/$$ap/template_variants/$$v/templates; \
