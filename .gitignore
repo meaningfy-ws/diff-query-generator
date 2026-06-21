@@ -130,6 +130,7 @@ dmypy.json
 
 # project-specific
 output/
+temp-output/
 
 # local tooling / agent runtime (GitNexus, IDE, Claude)
 .gitnexus
