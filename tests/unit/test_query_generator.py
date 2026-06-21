@@ -66,3 +66,25 @@ def test_reified_property_additions_generator(tmp_path):
     assert isinstance(generated_file_content, str)
     assert expected_query_text in generated_file_content
 
+
+def test_property_value_update_filter_captures_all_four_cases(tmp_path):
+    # The pairing FILTER must keep the original two cases and add #142 (language-tag
+    # change/removal) and #143 (datatype <-> object) — for detail and count templates alike.
+    case_3 = "(str(?oldValue) = str(?newValue))"
+    case_4 = "(isLiteral(?oldValue) != isLiteral(?newValue))"
+    for operation, template_name in [
+        ("updated_property", "property_value_updates.rq"),
+        ("count_updated_property", "count_property_value_updates.rq"),
+        ("updated_reified", "reified_property_value_updates.rq"),
+        ("count_updated_reified", "count_reified_property_value_updates.rq"),
+    ]:
+        query_generator = QueryGenerator(cls="skos:Concept", operation=operation,
+                                         prop="skosxl:prefLabel",
+                                         object_property="skosxl:literalForm",
+                                         output_folder_path=str(tmp_path),
+                                         template=QUERIES_TEMPLATES.get_template(template_name))
+        query_generator.to_file()
+        content = get_file_content(query_generator.build_file_path())
+        assert case_3 in content, template_name
+        assert case_4 in content, template_name
+
